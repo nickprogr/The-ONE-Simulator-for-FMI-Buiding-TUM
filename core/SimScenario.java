@@ -320,6 +320,7 @@ public class SimScenario implements Serializable {
 			Settings s = new Settings(GROUP_NS+i);
 			s.setSecondaryNamespace(GROUP_NS);
 			String gid = s.getSetting(GROUP_ID_S);
+			String personType = s.getSetting("personType");
 			int nrofHosts = s.getInt(NROF_HOSTS_S);
 			int nrofInterfaces = s.getInt(NROF_INTERF_S);
 			int appCount;
@@ -395,7 +396,7 @@ public class SimScenario implements Serializable {
 				// new instances of movement model and message router
 				DTNHost host = new DTNHost(this.messageListeners, 
 						this.movementListeners,	gid, interfaces, comBus, 
-						mmProto, mRouterProto);
+						mmProto, mRouterProto, personType);
 				hosts.add(host);
 			}
 		}

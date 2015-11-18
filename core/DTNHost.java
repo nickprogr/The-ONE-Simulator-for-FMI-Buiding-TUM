@@ -4,9 +4,7 @@
  */
 package core;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import movement.MovementModel;
 import movement.Path;
@@ -34,7 +32,11 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 
-	public boolean peopleWithinRange = false;
+	private java.util.Map<DTNHost,Double>connectedHosts = new HashMap<>();
+
+	private String personType = "na";
+	public String TYPE_STUDENT = "TYPE_STUDENT";
+	public String TYPE_STAFF = "TYPE_STAFF";
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -54,12 +56,13 @@ public class DTNHost implements Comparable<DTNHost> {
 			List<MovementListener> movLs,
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus, 
-			MovementModel mmProto, MessageRouter mRouterProto) {
+			MovementModel mmProto, MessageRouter mRouterProto, String personType) {
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
 		this.address = getNextAddress();
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
+		this.personType = personType;
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();
@@ -89,6 +92,25 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		setEntryLocation();
+	}
+	private void setEntryLocation(){
+		Random rng = new Random();
+		switch (rng.nextInt(3)) {
+			case 0:
+				this.location.setLocation(450.0, 90.0);
+				break;
+			case 1:
+				this.location.setLocation(500.0,220.0);
+				break;
+			case 2:
+				this.location.setLocation(15.0,40.0);
+			break;
+		}
+	}
+
+	public void setPersonType(String personType){
+		this.personType = personType;
 	}
 	
 	/**
@@ -215,6 +237,41 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getName() {
+		return this.name;
+	}
+	public String getPersonType() {
+		return this.personType;
+	}
+	private int distributionTime = 1000;
+	public void addConnection(DTNHost host){
+		if(core.SimClock.getTime() > distributionTime && this.getPersonType().equals(TYPE_STUDENT) && host.getPersonType().equals(TYPE_STUDENT))
+			this.connectedHosts.put(host,500.0);		//Connection holds for 500s
+		//this.connectedHosts.add(host);
+	}
+	public void removeConnection(DTNHost host){
+		if(core.SimClock.getTime() > distributionTime && this.getPersonType().equals(TYPE_STUDENT) && host.getPersonType().equals(TYPE_STUDENT))
+			this.connectedHosts.remove(host);
+	}
+	private void refreshConnectionTimings(double timeIncrement){
+		if(this.connectedHosts.size()>0)
+			System.out.println("conn "+connectedHosts.toString());
+		for (java.util.Map.Entry<DTNHost, Double> entry : this.connectedHosts.entrySet()) {
+			double time = entry.getValue() - timeIncrement;
+			System.out.println("time "+time);
+			if(time > 0)
+				entry.setValue(time);
+			else
+				entry.setValue(0.0);
+		}
+	}
+	private boolean hasActiveConnection(){
+		for (java.util.Map.Entry<DTNHost, Double> entry : this.connectedHosts.entrySet()) {
+			if (entry.getValue() > 0)
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -406,15 +463,24 @@ public class DTNHost implements Comparable<DTNHost> {
 
 
 		/* if 'humanInteractionInterface' is in range with another one */
-		if(peopleWithinRange){
+		refreshConnectionTimings(timeIncrement);
+
+		//if(connectedHosts.size() > 0 && this.personType.equals(this.TYPE_STUDENT)){
+		//if(hasActiveConnection()){// && this.personType.equals(this.TYPE_STUDENT)){
+
+		if(hasActiveConnection() && !onTheWayToALecture){
 			/* decide if normal movement is interrupted, to interact */
 			System.out.println("Translated");
 			this.location.translate(0, 0);
 		}
 		else
 			this.location.translate(dx, dy);
-	}	
+	}
+	private boolean onTheWayToALecture = false;
 
+	public void setOnTheWayToALecture(boolean lecture){
+		onTheWayToALecture = lecture;
+	}
 	/**
 	 * Sets the next destination and speed to correspond the next waypoint
 	 * on the path.

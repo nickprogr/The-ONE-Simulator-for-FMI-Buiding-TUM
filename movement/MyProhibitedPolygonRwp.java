@@ -5,6 +5,7 @@ import core.Settings;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Random Waypoint Movement with a prohibited region where nodes may not move
@@ -38,6 +39,8 @@ public class MyProhibitedPolygonRwp
   //private Coord maxBound;
   private int localMaxX;
   private int localMaxY;
+    private boolean goToLecture = false;
+    private boolean isActive = true;
   //==========================================================================//
 
 
@@ -48,6 +51,10 @@ public class MyProhibitedPolygonRwp
   @Override
   public Path getPath() {
     // Creates a new path from the previous waypoint to a new one.
+      if(goToLecture) {
+          return null;
+      }
+
     final Path p;
     p = new Path( super.generateSpeed() );
     p.addWaypoint( this.lastWaypoint.clone() );
@@ -57,7 +64,37 @@ public class MyProhibitedPolygonRwp
     // asking for the next one.
     Coord c;
     do {
-      c = this.randomCoord();
+        //If I can reach lecture place in double the time from the current position, can check another position.
+        Coord lectureCoord = new Coord(475.0,140.0);
+        Random rng = new Random();
+        switch (rng.nextInt(2)) {
+            case 0:
+                lectureCoord = new Coord(475.0,140.0);
+                break;
+            case 1:
+                lectureCoord = new Coord(440.0,200.0);
+                break;
+        }
+
+
+        if(2000 < core.SimClock.getTime() && core.SimClock.getTime() < 4000 ){
+            c = lectureCoord;
+            goToLecture = true;
+            this.host.setOnTheWayToALecture(true);
+        }else{
+            c = this.randomCoord();
+        }
+        /*double timeToLecture = 3000.0 - core.SimClock.getTime();
+        double possibleMovement = timeToLecture * super.generateSpeed();
+
+        Coord lectureCoord = new Coord(475.0,140.0);
+        double distance = host.getLocation().distance(lectureCoord);
+        if (possibleMovement >= 2*distance)
+            c = this.randomCoord();
+        else{
+            c = lectureCoord;
+            goToLecture = true;
+        }*/
     } while ( pathIntersects( this.polygon, this.lastWaypoint, c ) );
     p.addWaypoint( c );
 
@@ -108,16 +145,22 @@ public class MyProhibitedPolygonRwp
   @Override
   public boolean isActive() {
     final double curTime = core.SimClock.getTime();
-    return !(curTime >= 2500 && curTime <= 3500);
+    //return true;//!(curTime >= 2500 && curTime <= 3500);
+      return isActive;
   }
 
   @Override
   public double nextPathAvailable() {
     final double curTime = core.SimClock.getTime();
-
-    if (curTime >= 2500 && curTime <= 3500) {
-      return 3500;
+    if(goToLecture){
+        goToLecture = false;
+        //return curTime+1000.0;
+        host.setOnTheWayToALecture(false);
+        return 4000.0;
     }
+    //if (curTime >= 2500 && curTime <= 3500) {
+    //  return 3500;
+    //}
 
     return curTime;
   }
