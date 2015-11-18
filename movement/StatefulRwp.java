@@ -54,7 +54,7 @@ extends MovementModel {
     return new StatefulRwp( this );
   }
 
-  private Coord randomCoord() {
+  public Coord randomCoord() {
     final double x;
     if ( this.state == State.LEFT ) {
       x = rng.nextDouble() * super.getMaxX() / 2;

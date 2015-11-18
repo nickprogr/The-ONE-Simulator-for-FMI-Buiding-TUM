@@ -57,8 +57,8 @@ public class RandomWaypoint extends MovementModel {
 	public RandomWaypoint replicate() {
 		return new RandomWaypoint(this);
 	}
-	
-	protected Coord randomCoord() {
+
+	public Coord randomCoord() {
 		return new Coord(rng.nextDouble() * getMaxX(),
 				rng.nextDouble() * getMaxY());
 	}

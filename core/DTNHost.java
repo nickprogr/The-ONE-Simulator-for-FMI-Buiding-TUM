@@ -6,6 +6,8 @@ package core;
 
 import java.util.*;
 
+import TemporalBehaviour.DailyPlan;
+import TemporalBehaviour.*;
 import movement.MovementModel;
 import movement.Path;
 import routing.MessageRouter;
@@ -38,6 +40,18 @@ public class DTNHost implements Comparable<DTNHost> {
 	public String TYPE_STUDENT = "TYPE_STUDENT";
 	public String TYPE_STAFF = "TYPE_STAFF";
 
+	public State getState() {
+		return state;
+	}
+
+	private State state = new FreetimeState(this);
+
+	public DailyPlan getDailyPlan() {
+		return dailyPlan;
+	}
+
+	private DailyPlan dailyPlan;
+
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
 		reset();
@@ -56,13 +70,18 @@ public class DTNHost implements Comparable<DTNHost> {
 			List<MovementListener> movLs,
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus, 
-			MovementModel mmProto, MessageRouter mRouterProto, String personType) {
+			MovementModel mmProto, MessageRouter mRouterProto, String personType, DailyPlan dailyPlan) {
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
 		this.address = getNextAddress();
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
 		this.personType = personType;
+
+		this.dailyPlan = dailyPlan;
+		this.dailyPlan.setHost(this);
+		this.dailyPlan.chooseLectures();		//Select Lectures taken through out the day
+		this.dailyPlan.printLectures();
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();
@@ -120,6 +139,10 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	private synchronized static int getNextAddress() {
 		return nextAddress++;	
+	}
+
+	public void changeState(State state){
+		this.state = state;
 	}
 
 	/**
@@ -244,34 +267,15 @@ public class DTNHost implements Comparable<DTNHost> {
 	public String getPersonType() {
 		return this.personType;
 	}
-	private int distributionTime = 1000;
+
 	public void addConnection(DTNHost host){
-		if(core.SimClock.getTime() > distributionTime && this.getPersonType().equals(TYPE_STUDENT) && host.getPersonType().equals(TYPE_STUDENT))
-			this.connectedHosts.put(host,500.0);		//Connection holds for 500s
-		//this.connectedHosts.add(host);
+		state.initConnection(host);
+	}
+	public Map<DTNHost,Double> getConnectedHosts(){
+		return connectedHosts;
 	}
 	public void removeConnection(DTNHost host){
-		if(core.SimClock.getTime() > distributionTime && this.getPersonType().equals(TYPE_STUDENT) && host.getPersonType().equals(TYPE_STUDENT))
-			this.connectedHosts.remove(host);
-	}
-	private void refreshConnectionTimings(double timeIncrement){
-		if(this.connectedHosts.size()>0)
-			System.out.println("conn "+connectedHosts.toString());
-		for (java.util.Map.Entry<DTNHost, Double> entry : this.connectedHosts.entrySet()) {
-			double time = entry.getValue() - timeIncrement;
-			System.out.println("time "+time);
-			if(time > 0)
-				entry.setValue(time);
-			else
-				entry.setValue(0.0);
-		}
-	}
-	private boolean hasActiveConnection(){
-		for (java.util.Map.Entry<DTNHost, Double> entry : this.connectedHosts.entrySet()) {
-			if (entry.getValue() > 0)
-				return true;
-		}
-		return false;
+		state.removeConnection(host);
 	}
 
 	/**
@@ -426,7 +430,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * not time to move yet
 	 * @param timeIncrement How long time the node moves
 	 */
-	public void move(double timeIncrement) {		
+	public void move(double timeIncrement) {
+		this.dailyPlan.update();
 		double possibleMovement;
 		double distance;
 		double dx, dy;
@@ -446,6 +451,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		while (possibleMovement >= distance) {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
+			this.getState().reachedDestination();					//TODO: Does not get called correctly
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
 				return; // no more waypoints left
@@ -459,22 +465,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		dy = (possibleMovement/distance) * (this.destination.getY() -
 				this.location.getY());
 
-		//this.location.translate(dx, dy);
-
-
-		/* if 'humanInteractionInterface' is in range with another one */
-		refreshConnectionTimings(timeIncrement);
-
-		//if(connectedHosts.size() > 0 && this.personType.equals(this.TYPE_STUDENT)){
-		//if(hasActiveConnection()){// && this.personType.equals(this.TYPE_STUDENT)){
-
-		if(hasActiveConnection() && !onTheWayToALecture){
-			/* decide if normal movement is interrupted, to interact */
-			System.out.println("Translated");
-			this.location.translate(0, 0);
-		}
-		else
-			this.location.translate(dx, dy);
+		this.location.translate(dx, dy);
 	}
 	private boolean onTheWayToALecture = false;
 
@@ -488,6 +479,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * should wait
 	 */
 	private boolean setNextWaypoint() {
+
+
 		if (path == null) {
 			path = movement.getPath();
 		}
@@ -612,4 +605,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		return this.getAddress() - h.getAddress();
 	}
 
+	public MovementModel getMovement() {
+		return movement;
+	}
 }

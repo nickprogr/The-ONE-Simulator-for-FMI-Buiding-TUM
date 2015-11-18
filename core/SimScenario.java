@@ -4,6 +4,9 @@
  */
 package core;
 
+import TemporalBehaviour.DailyPlan;
+import TemporalBehaviour.Lecture;
+import TemporalBehaviour.RoomPlans;
 import input.EventQueue;
 import input.EventQueueHandler;
 
@@ -86,6 +89,8 @@ public class SimScenario implements Serializable {
 	private World world;
 	/** List of hosts in this simulation */
 	protected List<DTNHost> hosts;
+
+	protected RoomPlans roomPlans = new RoomPlans();
 	/** Name of the simulation */
 	private String name;
 	/** number of host groups */
@@ -158,14 +163,30 @@ public class SimScenario implements Serializable {
 		int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE, 2);
 		this.worldSizeX = worldSize[0];
 		this.worldSizeY = worldSize[1];
-		
+
+		createRoomPlans();
 		createHosts();
 		
 		this.world = new World(hosts, worldSizeX, worldSizeY, updateInterval, 
 				updateListeners, simulateConnections, 
 				eqHandler.getEventQueues());
 	}
-	
+
+	private void createRoomPlans() {
+
+		//Room1
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK1, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK2, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK3, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK4, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
+		//Room2
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK1, DailyPlan.LECTURE_LENGHT, new Coord(440.0,200.0)));
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK4, DailyPlan.LECTURE_LENGHT, new Coord(440.0,200.0)));
+		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK5, DailyPlan.LECTURE_LENGHT, new Coord(440.0,200.0)));
+
+
+	}
+
 	/**
 	 * Returns the SimScenario instance and creates one if it doesn't exist yet
 	 */
@@ -394,9 +415,11 @@ public class SimScenario implements Serializable {
 
 				// prototypes are given to new DTNHost which replicates
 				// new instances of movement model and message router
+				DailyPlan dailyPlan = new DailyPlan(roomPlans);
+
 				DTNHost host = new DTNHost(this.messageListeners, 
 						this.movementListeners,	gid, interfaces, comBus, 
-						mmProto, mRouterProto, personType);
+						mmProto, mRouterProto, personType, dailyPlan);
 				hosts.add(host);
 			}
 		}

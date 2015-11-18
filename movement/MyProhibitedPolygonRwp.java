@@ -40,7 +40,6 @@ public class MyProhibitedPolygonRwp
   private int localMaxX;
   private int localMaxY;
     private boolean goToLecture = false;
-    private boolean isActive = true;
   //==========================================================================//
 
 
@@ -48,67 +47,90 @@ public class MyProhibitedPolygonRwp
   //==========================================================================//
   // Implementation
   //==========================================================================//
-  @Override
-  public Path getPath() {
-    // Creates a new path from the previous waypoint to a new one.
-      if(goToLecture) {
-          return null;
-      }
+//  @Override
+//    public Path getPath() {
+//        // Creates a new path from the previous waypoint to a new one.
+//        if(goToLecture) {
+//            return null;
+//        }
+//
+//        final Path p;
+//        p = new Path( super.generateSpeed() );
+//        p.addWaypoint( this.lastWaypoint.clone() );
+//
+//        // Add only one point. An arbitrary number of Coords could be added to
+//        // the path here and the simulator will follow the full path before
+//        // asking for the next one.
+//        Coord c;
+//        do {
+//            //If I can reach lecture place in double the time from the current position, can check another position.
+//            Coord lectureCoord = new Coord(475.0,140.0);
+//            Random rng = new Random();
+//            switch (rng.nextInt(2)) {
+//                case 0:
+//                    lectureCoord = new Coord(475.0,140.0);
+//                    break;
+//                case 1:
+//                    lectureCoord = new Coord(440.0,200.0);
+//                    break;
+//            }
+//
+//
+//            if(2000 < core.SimClock.getTime() && core.SimClock.getTime() < 4000 ){
+//                c = lectureCoord;
+//                goToLecture = true;
+//                this.host.setOnTheWayToALecture(true);
+//            }else{
+//                c = this.randomCoord();
+//            }
+//        /*double timeToLecture = 3000.0 - core.SimClock.getTime();
+//        double possibleMovement = timeToLecture * super.generateSpeed();
+//
+//        Coord lectureCoord = new Coord(475.0,140.0);
+//        double distance = host.getLocation().distance(lectureCoord);
+//        if (possibleMovement >= 2*distance)
+//            c = this.randomCoord();
+//        else{
+//            c = lectureCoord;
+//            goToLecture = true;
+//        }*/
+//        } while ( pathIntersects( this.polygon, this.lastWaypoint, c ) );
+//        p.addWaypoint( c );
+//
+//        this.lastWaypoint = c;
+//        return p;
+//    }
+    @Override
+    public Path getPath() {
+        // Creates a new path from the previous waypoint to a new one.
 
-    final Path p;
-    p = new Path( super.generateSpeed() );
-    p.addWaypoint( this.lastWaypoint.clone() );
+        final Path p;
+        p = new Path( super.generateSpeed() );
+        p.addWaypoint( this.lastWaypoint.clone() );
 
-    // Add only one point. An arbitrary number of Coords could be added to
-    // the path here and the simulator will follow the full path before
-    // asking for the next one.
-    Coord c;
-    do {
-        //If I can reach lecture place in double the time from the current position, can check another position.
-        Coord lectureCoord = new Coord(475.0,140.0);
-        Random rng = new Random();
-        switch (rng.nextInt(2)) {
-            case 0:
-                lectureCoord = new Coord(475.0,140.0);
-                break;
-            case 1:
-                lectureCoord = new Coord(440.0,200.0);
-                break;
-        }
+//        // Add only one point. An arbitrary number of Coords could be added to
+//        // the path here and the simulator will follow the full path before
+//        // asking for the next one.
+//        Coord c;
+//        do {
+//                c = this.randomCoord();
+//        } while ( pathIntersects( this.polygon, this.lastWaypoint, c ) );
 
+        Coord c = host.getState().getDestination();
+        p.addWaypoint( c );
 
-        if(2000 < core.SimClock.getTime() && core.SimClock.getTime() < 4000 ){
-            c = lectureCoord;
-            goToLecture = true;
-            this.host.setOnTheWayToALecture(true);
-        }else{
-            c = this.randomCoord();
-        }
-        /*double timeToLecture = 3000.0 - core.SimClock.getTime();
-        double possibleMovement = timeToLecture * super.generateSpeed();
-
-        Coord lectureCoord = new Coord(475.0,140.0);
-        double distance = host.getLocation().distance(lectureCoord);
-        if (possibleMovement >= 2*distance)
-            c = this.randomCoord();
-        else{
-            c = lectureCoord;
-            goToLecture = true;
-        }*/
-    } while ( pathIntersects( this.polygon, this.lastWaypoint, c ) );
-    p.addWaypoint( c );
-
-    this.lastWaypoint = c;
-    return p;
-  }
-
+        this.lastWaypoint = c;
+        return p;
+    }
   @Override
   public Coord getInitialLocation() {
-    do {
-      this.lastWaypoint = this.randomCoord();
-    } while ( ( this.invert ) ?
-            isOutside( polygon, this.lastWaypoint ) :
-            isInside( this.polygon, this.lastWaypoint ) );
+//    do {
+      this.lastWaypoint = new Coord(
+              rng.nextDouble() * super.getMaxX(),
+              rng.nextDouble() * super.getMaxY());
+//    } while ( ( this.invert ) ?
+//            isOutside( polygon, this.lastWaypoint ) :
+//            isInside( this.polygon, this.lastWaypoint ) );
     return this.lastWaypoint;
   }
 
@@ -117,37 +139,41 @@ public class MyProhibitedPolygonRwp
     return new MyProhibitedPolygonRwp( this );
   }
 
-  private Coord randomCoord() {
+  public Coord randomCoord() {
 
     // Get the simulation time
-    final double curTime = core.SimClock.getTime();
+//    final double curTime = core.SimClock.getTime();
 
-    if(curTime >= 1500 && curTime <= 4500) {
-      final double endTime = core.SimScenario.getInstance().getEndTime();
-      final double t = 1 / 2;
-
-      // Set the bounds based on the time
-      final double k = Math.sin( t * Math.PI );
-      final double hx = super.getMaxX() / 6;
-      final double hy = super.getMaxY() / 6;
-
-
-      return new Coord(
-              k * hx + ( rng.nextDouble() * hx ),
-              k * hy + ( rng.nextDouble() * hy ) );
-    }
-
-    return new Coord(
-            rng.nextDouble() * super.getMaxX(),
-            rng.nextDouble() * super.getMaxY() );
+//    if(curTime >= 1500 && curTime <= 4500) {
+//      final double endTime = core.SimScenario.getInstance().getEndTime();
+//      final double t = 1 / 2;
+//
+//      // Set the bounds based on the time
+//      final double k = Math.sin( t * Math.PI );
+//      final double hx = super.getMaxX() / 6;
+//      final double hy = super.getMaxY() / 6;
+//
+//
+//      return new Coord(
+//              k * hx + ( rng.nextDouble() * hx ),
+//              k * hy + ( rng.nextDouble() * hy ) );
+//    }
+      Coord c;
+      do {
+               c = new Coord(
+                       rng.nextDouble() * super.getMaxX(),
+                       rng.nextDouble() * super.getMaxY());
+        } while ( pathIntersects( this.polygon, this.lastWaypoint, c ) );
+    return c;
   }
 
-  @Override
-  public boolean isActive() {
-    final double curTime = core.SimClock.getTime();
-    //return true;//!(curTime >= 2500 && curTime <= 3500);
-      return isActive;
-  }
+//  @Override
+//  public boolean isActive() {
+//    final double curTime = core.SimClock.getTime();
+//    //return true;//!(curTime >= 2500 && curTime <= 3500);
+//      return isActive;
+//  }
+
 
   @Override
   public double nextPathAvailable() {
@@ -158,6 +184,8 @@ public class MyProhibitedPolygonRwp
         host.setOnTheWayToALecture(false);
         return 4000.0;
     }
+
+
     //if (curTime >= 2500 && curTime <= 3500) {
     //  return 3500;
     //}

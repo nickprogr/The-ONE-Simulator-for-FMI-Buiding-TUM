@@ -50,7 +50,7 @@ extends MovementModel {
     return p;
   }
 
-  protected Coord randomCoord() {
+  public Coord randomCoord() {
     // Get the simulation time
     final double curTime = SimClock.getTime();
     // NOTE: Cannot be called from getInitialLocation()!

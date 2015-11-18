@@ -78,7 +78,7 @@ extends MovementModel {
     return new ActivityPeriodRwp( this );
   }
 
-  private Coord randomCoord() {
+  public Coord randomCoord() {
     return new Coord( rng.nextDouble() * super.getMaxX(),
                       rng.nextDouble() * super.getMaxY() );
   }

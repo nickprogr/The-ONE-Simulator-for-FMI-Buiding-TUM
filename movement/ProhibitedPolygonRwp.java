@@ -81,7 +81,7 @@ extends MovementModel {
     return new ProhibitedPolygonRwp( this );
   }
 
-  private Coord randomCoord() {
+  public Coord randomCoord() {
     return new Coord(
         rng.nextDouble() * super.getMaxX(),
         rng.nextDouble() * super.getMaxY() );

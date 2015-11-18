@@ -41,7 +41,7 @@ extends MovementModel {
     return new DiscontinuousRwp( this );
   }
 
-  private Coord randomCoord() {
+  public Coord randomCoord() {
     return new Coord( rng.nextDouble() * super.getMaxX(),
         rng.nextDouble() * super.getMaxY() );
   }
