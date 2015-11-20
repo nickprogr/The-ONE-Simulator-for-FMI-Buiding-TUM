@@ -9,11 +9,11 @@ import java.util.ArrayList;
 /**
  * Created by Matthias on 18.11.2015.
  */
-public class Cafeteria extends State {
+public class CafeteriaState extends State {
     private double stateEnterTime = 0;
     private boolean toldDestination = false;
 
-    public Cafeteria(DTNHost host){
+    public CafeteriaState(DTNHost host){
         super(host);
         stateEnterTime = SimClock.getTime();
     }

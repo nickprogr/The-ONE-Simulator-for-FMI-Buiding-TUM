@@ -178,18 +178,6 @@ public class MyProhibitedPolygonRwp
   @Override
   public double nextPathAvailable() {
     final double curTime = core.SimClock.getTime();
-    if(goToLecture){
-        goToLecture = false;
-        //return curTime+1000.0;
-        host.setOnTheWayToALecture(false);
-        return 4000.0;
-    }
-
-
-    //if (curTime >= 2500 && curTime <= 3500) {
-    //  return 3500;
-    //}
-
     return curTime;
   }
   //==========================================================================//

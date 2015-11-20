@@ -33,7 +33,7 @@ public class LectureState extends State {
             double rand = random.nextDouble();
             State state;
             if(rand < 0.40)
-                state = new Cafeteria(host);
+                state = new CafeteriaState(host);
             else
                 state = new FreetimeState(host);
             c = state.getDestination();
