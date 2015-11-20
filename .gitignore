@@ -1,2 +1,6 @@
 *reports*/*.txt
 *.class
+out/production/the-one/.idea/misc.xml
+out/production/the-one/.idea/workspace.xml
+out/production/the-one/the-one.iml
+the-one.iml
