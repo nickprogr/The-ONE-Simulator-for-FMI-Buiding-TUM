@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>4</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>72</x>
+      <y>360</y>
+      <w>40</w>
+      <h>20</h>
+    </coordinates>
+    <panel_attributes>World
+--
+- moveHosts()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>384</y>
+      <w>40</w>
+      <h>20</h>
+    </coordinates>
+    <panel_attributes>SimScentario
+--
+#createHosts()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>192</x>
+      <y>356</y>
+      <w>120</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>DTNHost
+--
+location:Coord
+destination:Coord
+movement:MovementModel
+path:Path
+speed:double
+nextTimeToMove:double
+name:String
+movListeners:List&lt;MovementListener&gt;
+connectedHosts:Map&lt;DTNHost,Double&gt;
+personType:String
+state:State
+dailyPlan:DailyPlan
+--
+setEntryLocation()
+changeState(State state)
+isMovementActive()
+getLocation()
+getPath
+setLoaction
+setName
+move
+setNextWaypoint
+_setOnTheWayToALecture</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>284</x>
+      <y>512</y>
+      <w>12</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>248</x>
+      <y>552</y>
+      <w>84</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Person
+--
+Movement&lt;-UniversityMovement
+DailyPlan
+SocialBehavior
+TransportationMode
+...
+--
+move in consideration of 
+socail behaviour
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>200</x>
+      <y>664</y>
+      <w>68</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Student
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>288</x>
+      <y>664</y>
+      <w>60</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Staff
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>240</x>
+      <y>632</y>
+      <w>48</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;100.0;50.0;10.0;50.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>276</x>
+      <y>632</y>
+      <w>60</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0;130.0;50.0;130.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>484</x>
+      <y>264</y>
+      <w>144</w>
+      <h>124</h>
+    </coordinates>
+    <panel_attributes>DailyPlan
+--
+setHost(host) (required?-&gt;constructor)
+roomPlans RandomPlans
+selectedLectures:ArrayList&lt;Lecture&gt; (-&gt;Class Timetable)
+host:DTNHost
+TIMINGS:double
+--
+setHost(DTNHost) (move to constructor?)
+chooseLectures() (selected random)
+update()
+printLectures()
+getLecturesAtTime(double time)
+/arrive
+/goHome
+/"Hungry"-State
+/Smoking/Coffee
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>476</x>
+      <y>464</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>StudentDay
+--
+Lectures(Time,Location)
+Studying
+Eat
+Toilet
+Tutorium
+GroupExercise</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>564</x>
+      <y>464</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>StaffDay
+--
+Holding Lectures
+Holding Tutoriums
+Working
+Eat
+Toilet</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>384</y>
+      <w>64</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;10.0;140.0;170.0;10.0;170.0;10.0;200.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>556</x>
+      <y>448</y>
+      <w>60</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0;130.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>308</x>
+      <y>360</y>
+      <w>184</w>
+      <h>16</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>440.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1140</x>
+      <y>280</y>
+      <w>96</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>SocialBehaviour (Clique&amp;Bridges)
+--
+List&lt;Clique&gt;Cliques
+InteractionDistance
+InteractionLikelyhood
+SocialVsRational
+(Beegin late in class 
+because of a conversation)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>464</x>
+      <y>232</y>
+      <w>596</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>Schdeduled/Unscheduled Behaviour
+--
+bg=#0000FA</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>172</x>
+      <y>340</y>
+      <w>192</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>Person
+--
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1100</x>
+      <y>232</y>
+      <w>216</w>
+      <h>304</h>
+    </coordinates>
+    <panel_attributes>Social Clique and Bridge Behaviour
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>148</x>
+      <y>388</y>
+      <w>48</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>108</x>
+      <y>368</y>
+      <w>88</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>200.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>172</x>
+      <y>536</y>
+      <w>192</w>
+      <h>172</h>
+    </coordinates>
+    <panel_attributes>Different Persons (tbd)
+--
+bg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>688</x>
+      <y>408</y>
+      <w>92</w>
+      <h>76</h>
+    </coordinates>
+    <panel_attributes>Lecture
+--
+startTime:double
+endTime:double
+length:double
+room:Coord
+lectureID:int
+__
+getter/setter
+lectureTakesPlace(double time)
+print()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>688</x>
+      <y>304</y>
+      <w>120</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>RoomPlans
+(maybe Singleton)
+--
+roomPlans:Map&lt;Coord,RoomPlan)
+--
+addLecture(Lecture lecture)
+getAllLecturesAttTime(double time)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>688</x>
+      <y>360</y>
+      <w>120</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>RoomPlan
+--
+lectures:ArrayList&lt;Lecture&gt;
+--
+addLecture(Lecture lecture)
+getLectures()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>740</x>
+      <y>344</y>
+      <w>12</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>740</x>
+      <y>392</y>
+      <w>12</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>724</x>
+      <y>588</y>
+      <w>76</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>MovementModel
+--
+rng:Random
+host:DTNHost
+ah:ActivenessHandler
+minSpeed:double
+maxSpeed:double
+minWaitTime:double
+maxWaitTime:double
+maxX:int
+maxY:int
+isActive:boolean
+interactiveTimer:boolean
+reactiveTimer:doble
+--
+getPath():Path
+getInitialLocation:Coord
+getHost():DTNHost
+isActive():boolean
+randomCoord():Coord
+setInactive(double inactiveInterval)
+nextPathAvailable():double
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>724</x>
+      <y>744</y>
+      <w>76</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>MyProhibitedPolygonRwp
+--
+polygon:List&lt;Coord&gt;
+lastWaypoint:Coord
+invert:boolean
+localMaxX:int
+localMaxY:int
+--
+nextPathAvailable():double
+setBoundsOfPolygon(List&lt;Coord&gt; pol)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>884</x>
+      <y>280</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>State
+&lt;&lt;abstract&gt;&gt;
+--
+getDestination():Coord
+reachedDestination()
+initConnection(DTNHost host)
+removeConnection(DTNHost host)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>836</x>
+      <y>356</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>FreetimeState
+--
+stateEnterTime:double
+--
+getDestination():Coord
+reachedDestination()
+initConnection(DTNHost host)
+removeConnection(DTNHost host)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>948</x>
+      <y>356</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>LectureState
+--
+toldDestination:boolean
+--
+getDestination():Coord
+reachedDestination()
+initConnection(DTNHost host)
+removeConnection(DTNHost host)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>836</x>
+      <y>424</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>CafeteriaState
+--
+stateEnterTime:double
+toldDestination:boolean
+--
+getDestination():Coord
+reachedDestination()
+initConnection(DTNHost host)
+removeConnection(DTNHost host)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>868</x>
+      <y>328</y>
+      <w>68</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;10.0;150.0;220.0;10.0;220.0;10.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>924</x>
+      <y>340</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;10.0;180.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>868</x>
+      <y>340</y>
+      <w>68</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>312</y>
+      <w>72</w>
+      <h>16</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>160.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>284</y>
+      <w>268</w>
+      <h>16</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+</panel_attributes>
+    <additional_attributes>650.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>924</x>
+      <y>412</y>
+      <w>80</w>
+      <h>20</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;10.0;180.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>948</x>
+      <y>424</y>
+      <w>76</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>...
+--
+...
+--
+getDestination():Coord
+reachedDestination()
+initConnection(DTNHost host)
+removeConnection(DTNHost host)
+bg=#AAAAAA</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>756</x>
+      <y>728</y>
+      <w>12</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1056</x>
+      <y>300</y>
+      <w>52</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>1248</x>
+      <y>248</y>
+      <w>56</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Note..
+bg=blue
+Not defined right now</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>1348</x>
+      <y>492</y>
+      <w>132</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>Note..
+bg=red
+Calculates next Destination</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>1348</x>
+      <y>576</y>
+      <w>132</w>
+      <h>52</h>
+    </coordinates>
+    <panel_attributes>Note..
+bg=red
+Calculates Path to next Destination
+- Random Movement
+- Not following a straight line 
+  if there is a wall between</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>676</x>
+      <y>568</y>
+      <w>336</w>
+      <h>256</h>
+    </coordinates>
+    <panel_attributes>Check and slightly adapt Movement
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>364</y>
+      <w>108</w>
+      <h>268</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+How it should be done
+</panel_attributes>
+    <additional_attributes>250.0;650.0;90.0;650.0;90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>308</x>
+      <y>504</y>
+      <w>424</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+How it is done
+</panel_attributes>
+    <additional_attributes>1040.0;330.0;840.0;330.0;840.0;100.0;330.0;100.0;330.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>552</y>
+      <w>1140</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;2830.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>828</x>
+      <y>744</y>
+      <w>76</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Map
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>796</x>
+      <y>772</y>
+      <w>40</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>176</x>
+      <y>552</y>
+      <w>56</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Note..
+bg=blue
+Not defined right now</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>836</x>
+      <y>484</y>
+      <w>148</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>bg=red
+Known Bugs
+- After note changes State, note moves forward and back once until it starts to go to the new destination
+- reachedDestination is not called at the right moment</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
