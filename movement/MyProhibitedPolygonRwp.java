@@ -31,7 +31,6 @@ public class MyProhibitedPolygonRwp
   //==========================================================================//
   final List <Coord> polygon = initializePolygon();
 
-  private Coord lastWaypoint;
   /** Inverted, i.e., only allow nodes to move inside the polygon. */
   private final boolean invert;
 
@@ -100,13 +99,13 @@ public class MyProhibitedPolygonRwp
 //        this.lastWaypoint = c;
 //        return p;
 //    }
-    @Override
-    public Path getPath() {
+    public MovementVector getPath(Coord destination, double speed) {
         // Creates a new path from the previous waypoint to a new one.
 
-        final Path p;
-        p = new Path( super.generateSpeed() );
-        p.addWaypoint( this.lastWaypoint.clone() );
+//        final Path p;
+//        p = new Path( super.generateSpeed() );
+//        p.addWaypoint( this.lastWaypoint.clone() );
+
 
 //        // Add only one point. An arbitrary number of Coords could be added to
 //        // the path here and the simulator will follow the full path before
@@ -116,23 +115,25 @@ public class MyProhibitedPolygonRwp
 //                c = this.randomCoord();
 //        } while ( pathIntersects( this.polygon, this.lastWaypoint, c ) );
 
-        Coord c = host.getState().getDestination();
-        p.addWaypoint( c );
+        //Coord c = host.getDailyBehaviour().getState().getDestination();
+        Coord c = destination;
+        //p.addWaypoint( c );
 
-        this.lastWaypoint = c;
-        return p;
+        this.lastWaypoint = c;  //TODO: line required?
+        return new MovementVector(c,speed);
+        //return p;
     }
-  @Override
-  public Coord getInitialLocation() {
-//    do {
-      this.lastWaypoint = new Coord(
-              rng.nextDouble() * super.getMaxX(),
-              rng.nextDouble() * super.getMaxY());
-//    } while ( ( this.invert ) ?
-//            isOutside( polygon, this.lastWaypoint ) :
-//            isInside( this.polygon, this.lastWaypoint ) );
-    return this.lastWaypoint;
-  }
+//  @Override
+//  public Coord getInitialLocation() {
+////    do {
+//      this.lastWaypoint = new Coord(
+//              rng.nextDouble() * super.getMaxX(),
+//              rng.nextDouble() * super.getMaxY());
+////    } while ( ( this.invert ) ?
+////            isOutside( polygon, this.lastWaypoint ) :
+////            isInside( this.polygon, this.lastWaypoint ) );
+//    return this.lastWaypoint;
+//  }
 
   @Override
   public MapBasedMovement replicate() {
@@ -168,10 +169,10 @@ public class MyProhibitedPolygonRwp
   }
 
 //  @Override
-//  public boolean isActive() {
+//  public boolean isMovementActive() {
 //    final double curTime = core.SimClock.getTime();
 //    //return true;//!(curTime >= 2500 && curTime <= 3500);
-//      return isActive;
+//      return isMovementActive;
 //  }
 
 
@@ -356,6 +357,11 @@ public class MyProhibitedPolygonRwp
   //==========================================================================//
   // Private - geometry
   //==========================================================================//
+
+
+  public boolean pathIntersects(Coord start, Coord end){
+        return pathIntersects(this.polygon,start,end);
+  }
   private static boolean pathIntersects(
           final List <Coord> polygon,
           final Coord start,

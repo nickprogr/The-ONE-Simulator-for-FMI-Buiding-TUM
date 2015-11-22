@@ -6,8 +6,7 @@ package core;
 
 import java.util.*;
 
-import TemporalBehaviour.DailyPlan;
-import TemporalBehaviour.*;
+import TemporalBehaviour.DailyBehaviour;
 import movement.MovementModel;
 import movement.Path;
 import routing.MessageRouter;
@@ -20,37 +19,27 @@ public class DTNHost implements Comparable<DTNHost> {
 	private static int nextAddress = 0;
 	private int address;
 
-	private Coord location; 	// where is the host
-	private Coord destination;	// where is it going
+	//private Coord location; 	// where is the host
+	//private Coord destination;	// where is it going
 
 	private MessageRouter router;
-	private MovementModel movement;
 	private Path path;
 	private double speed;
-	private double nextTimeToMove;
 	private String name;
 	private List<MessageListener> msgListeners;
-	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 
-	private java.util.Map<DTNHost,Double>connectedHosts = new HashMap<>();
 
 	private String personType = "na";
 	public String TYPE_STUDENT = "TYPE_STUDENT";
 	public String TYPE_STAFF = "TYPE_STAFF";
 
-	public State getState() {
-		return state;
+	public DailyBehaviour getDailyBehaviour() {
+		return dailyBehaviour;
 	}
 
-	private State state = new FreetimeState(this);
-
-	public DailyPlan getDailyPlan() {
-		return dailyPlan;
-	}
-
-	private DailyPlan dailyPlan;
+	private DailyBehaviour dailyBehaviour;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -67,21 +56,19 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param mRouterProto Prototype of the message router of this host
 	 */
 	public DTNHost(List<MessageListener> msgLs,
-			List<MovementListener> movLs,
-			String groupId, List<NetworkInterface> interf,
-			ModuleCommunicationBus comBus, 
-			MovementModel mmProto, MessageRouter mRouterProto, String personType, DailyPlan dailyPlan) {
+				   List<MovementListener> movLs,
+				   String groupId, List<NetworkInterface> interf,
+				   ModuleCommunicationBus comBus,
+				   MovementModel mmProto, MessageRouter mRouterProto, String personType) {
 		this.comBus = comBus;
-		this.location = new Coord(0,0);
 		this.address = getNextAddress();
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
 		this.personType = personType;
 
-		this.dailyPlan = dailyPlan;
-		this.dailyPlan.setHost(this);
-		this.dailyPlan.chooseLectures();		//Select Lectures taken through out the day
-		this.dailyPlan.printLectures();
+		this.dailyBehaviour = new DailyBehaviour(this, mmProto,movLs);
+		this.dailyBehaviour.chooseLectures();		//Select Lectures taken through out the day
+		this.dailyBehaviour.printLectures();
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();
@@ -93,39 +80,27 @@ public class DTNHost implements Comparable<DTNHost> {
 		//this.name = groupId + ((NetworkInterface)net.get(1)).getAddress();
 
 		this.msgListeners = msgLs;
-		this.movListeners = movLs;
 
 		// create instances by replicating the prototypes
-		this.movement = mmProto.replicate();
-		this.movement.setComBus(comBus);
-		this.movement.setHost(this);
+		//this.movement = mmProto.replicate();
 		setRouter(mRouterProto.replicate());
 
-		this.location = movement.getInitialLocation();
-
-		this.nextTimeToMove = movement.nextPathAvailable();
 		this.path = null;
 
-		if (movLs != null) { // inform movement listeners about the location
-			for (MovementListener l : movLs) {
-				l.initialLocation(this, this.location);
-			}
-		}
-		setEntryLocation();
 	}
-	private void setEntryLocation(){
-		Random rng = new Random();
-		switch (rng.nextInt(3)) {
-			case 0:
-				this.location.setLocation(450.0, 90.0);
-				break;
-			case 1:
-				this.location.setLocation(500.0,220.0);
-				break;
-			case 2:
-				this.location.setLocation(15.0,40.0);
-			break;
-		}
+	public boolean isMovementActive() {
+		return dailyBehaviour.isMovementActive();
+	}
+	//TODO: AcctionListener for connection
+
+	public void addConnection(DTNHost host){
+		dailyBehaviour.addConnection(host);
+	}
+	//public Map<DTNHost,Double> getConnectedHosts(){
+	//	return connectedHosts;
+	//}
+	public void removeConnection(DTNHost host){
+		dailyBehaviour.removeConnection(host);
 	}
 
 	public void setPersonType(String personType){
@@ -141,9 +116,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		return nextAddress++;	
 	}
 
-	public void changeState(State state){
-		this.state = state;
-	}
 
 	/**
 	 * Reset the host and its interfaces
@@ -152,14 +124,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		nextAddress = 0;
 	}
 
-	/**
-	 * Returns true if this node is actively moving (false if not)
-	 * @return true if this node is actively moving (false if not)
-	 */
-	public boolean isMovementActive() {
-		return this.movement.isActive();
-	}
-	
 	/**
 	 * Returns true if this node's radio is active (false if not)
 	 * @return true if this node's radio is active (false if not)
@@ -233,7 +197,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @return The location
 	 */
 	public Coord getLocation() {
-		return this.location;
+		return dailyBehaviour.getLocation();
 	}
 
 	/**
@@ -251,7 +215,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param location The location to set
 	 */
 	public void setLocation(Coord location) {
-		this.location = location.clone();
+		dailyBehaviour.setLocation(location.clone());
 	}
 
 	/**
@@ -268,15 +232,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		return this.personType;
 	}
 
-	public void addConnection(DTNHost host){
-		state.initConnection(host);
-	}
-	public Map<DTNHost,Double> getConnectedHosts(){
-		return connectedHosts;
-	}
-	public void removeConnection(DTNHost host){
-		state.removeConnection(host);
-	}
+
 
 	/**
 	 * Returns the messages in a collection.
@@ -431,76 +387,10 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param timeIncrement How long time the node moves
 	 */
 	public void move(double timeIncrement) {
-		this.dailyPlan.update();
-		double possibleMovement;
-		double distance;
-		double dx, dy;
-
-		if (!isMovementActive() || SimClock.getTime() < this.nextTimeToMove) {
-			return; 
-		}
-		if (this.destination == null) {
-			if (!setNextWaypoint()) {
-				return;
-			}
-		}
-
-		possibleMovement = timeIncrement * speed;
-		distance = this.location.distance(this.destination);
-
-		while (possibleMovement >= distance) {
-			// node can move past its next destination
-			this.location.setLocation(this.destination); // snap to destination
-			this.getState().reachedDestination();					//TODO: Does not get called correctly
-			possibleMovement -= distance;
-			if (!setNextWaypoint()) { // get a new waypoint
-				return; // no more waypoints left
-			}
-			distance = this.location.distance(this.destination);
-		}
-
-		// move towards the point for possibleMovement amount
-		dx = (possibleMovement/distance) * (this.destination.getX() -
-				this.location.getX());
-		dy = (possibleMovement/distance) * (this.destination.getY() -
-				this.location.getY());
-
-		this.location.translate(dx, dy);
-	}
-	private boolean onTheWayToALecture = false;
-
-	public void setOnTheWayToALecture(boolean lecture){
-		onTheWayToALecture = lecture;
-	}
-	/**
-	 * Sets the next destination and speed to correspond the next waypoint
-	 * on the path.
-	 * @return True if there was a next waypoint to set, false if node still
-	 * should wait
-	 */
-	private boolean setNextWaypoint() {
+		this.dailyBehaviour.update();
+		this.dailyBehaviour.move(timeIncrement);
 
 
-		if (path == null) {
-			path = movement.getPath();
-		}
-
-		if (path == null || !path.hasNext()) {
-			this.nextTimeToMove = movement.nextPathAvailable();
-			this.path = null;
-			return false;
-		}
-
-		this.destination = path.getNextWaypoint();
-		this.speed = path.getSpeed();
-
-		if (this.movListeners != null) {
-			for (MovementListener l : this.movListeners) {
-				l.newDestination(this, this.destination, this.speed);
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -605,7 +495,5 @@ public class DTNHost implements Comparable<DTNHost> {
 		return this.getAddress() - h.getAddress();
 	}
 
-	public MovementModel getMovement() {
-		return movement;
-	}
+
 }

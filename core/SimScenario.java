@@ -4,9 +4,6 @@
  */
 package core;
 
-import TemporalBehaviour.DailyPlan;
-import TemporalBehaviour.Lecture;
-import TemporalBehaviour.RoomPlans;
 import input.EventQueue;
 import input.EventQueueHandler;
 
@@ -90,7 +87,6 @@ public class SimScenario implements Serializable {
 	/** List of hosts in this simulation */
 	protected List<DTNHost> hosts;
 
-	protected RoomPlans roomPlans = new RoomPlans();
 	/** Name of the simulation */
 	private String name;
 	/** number of host groups */
@@ -164,27 +160,11 @@ public class SimScenario implements Serializable {
 		this.worldSizeX = worldSize[0];
 		this.worldSizeY = worldSize[1];
 
-		createRoomPlans();
 		createHosts();
 		
 		this.world = new World(hosts, worldSizeX, worldSizeY, updateInterval, 
 				updateListeners, simulateConnections, 
 				eqHandler.getEventQueues());
-	}
-
-	private void createRoomPlans() {
-
-		//Room1
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK1, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK2, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK3, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK4, DailyPlan.LECTURE_LENGHT, new Coord(475.0,140.0)));
-		//Room2
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK1, DailyPlan.LECTURE_LENGHT, new Coord(440.0,200.0)));
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK4, DailyPlan.LECTURE_LENGHT, new Coord(440.0,200.0)));
-		roomPlans.addLecture(new Lecture(DailyPlan.START_BLOCK5, DailyPlan.LECTURE_LENGHT, new Coord(440.0,200.0)));
-
-
 	}
 
 	/**
@@ -347,8 +327,8 @@ public class SimScenario implements Serializable {
 			int appCount;
 
 			// creates prototypes of MessageRouter and MovementModel
-			MovementModel mmProto = 
-				(MovementModel)s.createIntializedObject(MM_PACKAGE + 
+			MovementModel mmProto =
+				(MovementModel)s.createIntializedObject(MM_PACKAGE +
 						s.getSetting(MOVEMENT_MODEL_S));
 			MessageRouter mRouterProto = 
 				(MessageRouter)s.createIntializedObject(ROUTING_PACKAGE + 
@@ -415,11 +395,10 @@ public class SimScenario implements Serializable {
 
 				// prototypes are given to new DTNHost which replicates
 				// new instances of movement model and message router
-				DailyPlan dailyPlan = new DailyPlan(roomPlans);
 
 				DTNHost host = new DTNHost(this.messageListeners, 
 						this.movementListeners,	gid, interfaces, comBus, 
-						mmProto, mRouterProto, personType, dailyPlan);
+						mmProto, mRouterProto, personType);
 				hosts.add(host);
 			}
 		}

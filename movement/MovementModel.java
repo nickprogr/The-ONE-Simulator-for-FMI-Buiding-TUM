@@ -58,6 +58,8 @@ public abstract class MovementModel {
 	protected double minWaitTime;
 	protected double maxWaitTime;
 
+	protected Coord lastWaypoint;
+
 	private int maxX;
 	private int maxY;
 
@@ -172,7 +174,14 @@ public abstract class MovementModel {
 		return this.maxY;
 	}
 
-	
+	public void setLastWayPoint(Coord location){
+		this.lastWaypoint = location;
+	}
+
+	public boolean pathIntersects(Coord start, Coord end ) {
+		return true;
+	}
+
 	/**
 	 * Generates and returns a speed value between min and max of the 
 	 * {@link #WAIT_TIME} setting.
@@ -207,6 +216,10 @@ public abstract class MovementModel {
 	 * @return A new path or null
 	 */
 	public abstract Path getPath();
+
+	public MovementVector getPath(Coord destination, double speed){
+		return null;		//Only implemented in MyProhibitedPolygonRwp
+	}
 	
 	/**
 	 * Returns a new initial placement for a node
@@ -237,11 +250,12 @@ public abstract class MovementModel {
 		if(isActive)
 			return true;
 		//else
-		if(this.inactiveTimer && this.reactivateTime > SimClock.getTime())
+		if(this.inactiveTimer && this.reactivateTime > SimClock.getTime()){
 			return false;
+		}
 		inactiveTimer = false;
 		return true;
-		//return ah.isActive();
+		//return ah.isMovementActive();
 	}
 	public void setActive(boolean active){
 		this.isActive = active;

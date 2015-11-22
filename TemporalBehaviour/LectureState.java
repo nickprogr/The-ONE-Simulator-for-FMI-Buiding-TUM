@@ -13,8 +13,8 @@ public class LectureState extends State {
 
     private Lecture lecture;
 
-    public LectureState(DTNHost host, Lecture lecture){
-        super(host);
+    public LectureState(DailyBehaviour dailyBehaviour, State state, Lecture lecture){
+        super(dailyBehaviour, state);
         this.lecture = lecture;
     }
 
@@ -28,23 +28,23 @@ public class LectureState extends State {
             c = lecture.getCoord();
         }else{
             //Goal reached
-            host.getMovement().setInactive(lecture.getEndTime()-SimClock.getTime());
+            dailyBehaviour.getMovement().setInactive(lecture.getEndTime()-SimClock.getTime());
             Random random = new Random();
             double rand = random.nextDouble();
             State state;
             if(rand < 0.40)
-                state = new CafeteriaState(host);
+                state = new CafeteriaState(dailyBehaviour, this);
             else
-                state = new FreetimeState(host);
+                state = new FreetimeState(dailyBehaviour, this);
             c = state.getDestination();
-            host.changeState(state);
+            dailyBehaviour.changeState(state);
         }
         return c;
     }
 
     @Override
     public void reachedDestination() {
-        System.out.println("Reached Lecture: "+host.getName());
+        //System.out.println("Reached Lecture: "+host.getName());
         //host.getMovement().setInactive(lecture.getLength());
         //host.isMovementActive();
         //host.changeState(new FreetimeState(host));

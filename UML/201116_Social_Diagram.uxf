@@ -49,7 +49,7 @@ movListeners:List&lt;MovementListener&gt;
 connectedHosts:Map&lt;DTNHost,Double&gt;
 personType:String
 state:State
-dailyPlan:DailyPlan
+dailyBehaviour:DailyPlan
 --
 setEntryLocation()
 changeState(State state)
