@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class CafeteriaState extends State {
     private double stateEnterTime = 0;
     private boolean toldDestination = false;
+    private Coord CAFETERIA = new Coord(70,50);
 
     public CafeteriaState(DailyBehaviour dailyBehaviour, State state){
         super(dailyBehaviour, state);
@@ -20,23 +21,21 @@ public class CafeteriaState extends State {
 
     @Override
     public Coord getDestination() {
-        Coord c;
-        if (!toldDestination){
-            toldDestination = true;
-            //c = new Coord(240,130);
-            c = new Coord(450.0,350);
-        }else {
-            //Goal reached
-            dailyBehaviour.getMovement().setInactive(800);
-            State state = new FreetimeState(dailyBehaviour, this);
-            c = state.getDestination();
-            dailyBehaviour.changeState(state);
-        }
-        return c;
+        this.dailyBehaviour.getHost().setName("Cafeteria");
+        destinationChanged = false;
+        return CAFETERIA;
     }
 
     @Override
     public void reachedDestination() {
+        //Goal reached
+        dailyBehaviour.getMovement().setInactive(800);
+        State state = new FreetimeState(dailyBehaviour, this);
+        dailyBehaviour.changeState(state);
+    }
+
+    @Override
+    public void update() {
         ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
         if( lectures.size() > 0){
             dailyBehaviour.changeState(new LectureState(dailyBehaviour, this, lectures.get(0)));
@@ -48,8 +47,8 @@ public class CafeteriaState extends State {
     @Override
     public void initConnection(DTNHost otherHost) {
         if(core.SimClock.getTime() > stateEnterTime+distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)){
-            this.connectedHosts.put(otherHost,500.0);		//Connection holds for 500s
-            dailyBehaviour.getMovement().setInactive(500);
+            //this.connectedHosts.put(otherHost,500.0);		//Connection holds for 500s
+            //dailyBehaviour.getMovement().setInactive(500);
         }
 
     }
@@ -57,7 +56,7 @@ public class CafeteriaState extends State {
     @Override
     public void removeConnection(DTNHost otherHost) {
         if(core.SimClock.getTime() > distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)) {
-            this.connectedHosts.remove(otherHost);
+            //this.connectedHosts.remove(otherHost);
         }
     }
 }

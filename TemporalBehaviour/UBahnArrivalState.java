@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class UBahnArrivalState extends State {
 
-    public static Coord ENTRANCE_COORDS = new Coord(107,36);
+    public static Coord ENTRANCE_COORDS = new Coord(107, 40);
 
     public UBahnArrivalState(DailyBehaviour dailyBehaviour, State state){
         super(dailyBehaviour, state);
@@ -19,12 +19,21 @@ public class UBahnArrivalState extends State {
 
     @Override
     public Coord getDestination() {
+        destinationChanged = false;
         return ENTRANCE_COORDS;
     }
 
     @Override
     public void reachedDestination() {
-        dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, new InitState(dailyBehaviour, null)));
+        //dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, new InitState(dailyBehaviour, null)));
+        dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, this));
+        //dailyBehaviour.changeState(new TestRoomFinger11(dailyBehaviour, this));
+
+    }
+
+    @Override
+    public void update() {
+
     }
 
 

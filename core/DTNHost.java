@@ -68,7 +68,7 @@ public class DTNHost implements Comparable<DTNHost> {
 
 		this.dailyBehaviour = new DailyBehaviour(this, mmProto,movLs);
 		this.dailyBehaviour.chooseLectures();		//Select Lectures taken through out the day
-		this.dailyBehaviour.printLectures();
+		//this.dailyBehaviour.printLectures();
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();
@@ -387,7 +387,6 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param timeIncrement How long time the node moves
 	 */
 	public void move(double timeIncrement) {
-		this.dailyBehaviour.update();
 		this.dailyBehaviour.move(timeIncrement);
 
 
@@ -496,4 +495,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	}
 
 
+	public void update() {
+		this.dailyBehaviour.update();
+	}
 }

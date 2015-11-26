@@ -18,36 +18,38 @@ public class LectureState extends State {
         this.lecture = lecture;
     }
 
-    private boolean toldDestination = false;
-
     @Override
     public Coord getDestination() {
-        Coord c;
-        if (!toldDestination){
-            toldDestination = true;
-            c = lecture.getCoord();
-        }else{
-            //Goal reached
-            dailyBehaviour.getMovement().setInactive(lecture.getEndTime()-SimClock.getTime());
-            Random random = new Random();
-            double rand = random.nextDouble();
-            State state;
-            if(rand < 0.40)
-                state = new CafeteriaState(dailyBehaviour, this);
-            else
-                state = new FreetimeState(dailyBehaviour, this);
-            c = state.getDestination();
-            dailyBehaviour.changeState(state);
-        }
-        return c;
+
+            this.dailyBehaviour.getHost().setName("Lecture");
+            destinationChanged = false;
+            return lecture.getCoord();
     }
 
     @Override
     public void reachedDestination() {
-        //System.out.println("Reached Lecture: "+host.getName());
-        //host.getMovement().setInactive(lecture.getLength());
-        //host.isMovementActive();
-        //host.changeState(new FreetimeState(host));
+        dailyBehaviour.getMovement().setActive(false);
+        dailyBehaviour.getMovement().setInactive(lecture.getEndTime()-SimClock.getTime());
+        //Goal reached
+        //dailyBehaviour.getMovement().setInactive(lecture.getEndTime()-SimClock.getTime());
+        Random random = new Random();
+        double rand = random.nextDouble();
+        State state;
+        if(rand < 0.40)
+            state = new CafeteriaState(dailyBehaviour, this);
+        else
+            state = new FreetimeState(dailyBehaviour, this);
+        dailyBehaviour.changeState(state);
+    }
+
+    public  boolean destinationChanged() {
+        //Only when changed since else a recalculation will be done regarding the movement path
+        return destinationChanged;
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override

@@ -220,7 +220,9 @@ public abstract class MovementModel {
 	public MovementVector getPath(Coord destination, double speed){
 		return null;		//Only implemented in MyProhibitedPolygonRwp
 	}
-	
+	public Path getPath(Coord source, Coord destination, double speed) {
+		return null;
+	}
 	/**
 	 * Returns a new initial placement for a node
 	 * @return The initial coordinates for a node
@@ -275,6 +277,9 @@ public abstract class MovementModel {
 		//return ah.isMovementActive();
 	}
 	public void setActive(boolean active){
+		if(active){
+			inactiveTimer = false;
+		}
 		this.isActive = active;
 	}
 

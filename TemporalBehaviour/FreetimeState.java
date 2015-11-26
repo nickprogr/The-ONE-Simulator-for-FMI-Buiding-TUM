@@ -18,14 +18,28 @@ public class FreetimeState extends State {
         super(dailyBehaviour, state);
         stateEnterTime = SimClock.getTime();
     }
+    private Coord c;
 
     @Override
     public Coord getDestination() {
-        return dailyBehaviour.getMovement().randomCoord();
+        this.dailyBehaviour.getHost().setName("Freetime");
+        destinationChanged = false;
+        if(c == null)
+            reachedDestination();   //generate new random position
+        return c;
     }
 
     @Override
     public void reachedDestination() {
+        c = dailyBehaviour.getMovement().randomCoord();
+        //ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
+        //if( lectures.size() > 0){
+        //    dailyBehaviour.changeState(new LectureState(dailyBehaviour, this, lectures.get(0)));
+        //}
+    }
+
+    @Override
+    public void update() {
         ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
         if( lectures.size() > 0){
             dailyBehaviour.changeState(new LectureState(dailyBehaviour, this, lectures.get(0)));
@@ -37,8 +51,8 @@ public class FreetimeState extends State {
     @Override
     public void initConnection(DTNHost otherHost) {
         if(core.SimClock.getTime() > stateEnterTime+distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)){
-            this.connectedHosts.put(otherHost, 500.0);		//Connection holds for 500s
-            dailyBehaviour.getMovement().setInactive(500);
+            //this.connectedHosts.put(otherHost, 500.0);		//Connection holds for 500s
+            //dailyBehaviour.getMovement().setInactive(500);
         }
 
     }
@@ -46,7 +60,7 @@ public class FreetimeState extends State {
     @Override
     public void removeConnection(DTNHost otherHost) {
         if(core.SimClock.getTime() > distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)) {
-            this.connectedHosts.remove(otherHost);
+            //this.connectedHosts.remove(otherHost);
         }
     }
 }

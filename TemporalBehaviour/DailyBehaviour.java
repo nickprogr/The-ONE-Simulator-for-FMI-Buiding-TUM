@@ -4,6 +4,7 @@ import core.*;
 import movement.MovementModel;
 import movement.MovementVector;
 import movement.MyProhibitedPolygonRwp;
+import movement.Path;
 
 import java.util.*;
 
@@ -66,8 +67,10 @@ public class DailyBehaviour {
         //}
 
         Random random = new Random();
+        //arrivalTime = 0;
         arrivalTime = (random.nextInt(30) * 100) + 100;
         departureTime = (random.nextInt(30) * 100) + 23000;
+        //departureTime = 999999999;
 
 
         //counter++;  //hardoced bullshit <nick>
@@ -142,7 +145,8 @@ public class DailyBehaviour {
     public void update(){
         //In normal conditions, all nodes will start from idle state
         if(state instanceof IdleState && arrivalTime <= SimClock.getTime() && departureTime > SimClock.getTime())  {
-           this.movementModel.setActive(true);
+            state.reachedDestination();
+            this.movementModel.setActive(true);
         }
 
         //if departureTime -> depart
@@ -150,6 +154,7 @@ public class DailyBehaviour {
             this.state = new UBahnDepartureState(this, this.state);
             //this.destination = this.state.getDestination();
         }
+        state.update();
     }
 
 
@@ -160,9 +165,6 @@ public class DailyBehaviour {
             System.out.println("\t- "+lecture.print());
         }
     }
-    public void move1(double timeIncrement){
-        this.location.setLocation(state.getDestination());
-    }
 
     public void move(double timeIncrement){
         double possibleMovement;
@@ -172,7 +174,7 @@ public class DailyBehaviour {
         if (!this.isMovementActive() || SimClock.getTime() < this.nextPathAvailable()) {
             return;
         }
-        if (this.destination == null) {
+        if (this.destination == null || state.destinationChanged()) {
             if (!clculateNextWaypoint()) {
                 return;
             }
@@ -187,6 +189,7 @@ public class DailyBehaviour {
             this.location.setLocation(this.destination); // snap to destination
             //this.getState().reachedDestination();
             possibleMovement -= distance;
+            distanceExceedsNextDestinationn = true;
             if (!clculateNextWaypoint()) { // get a new waypoint
                 return; // no more waypoints left
             }
@@ -207,16 +210,26 @@ public class DailyBehaviour {
      * @return True if there was a next waypoint to set, false if node still
      * should wait
      */
+    private Path path;
+    private boolean distanceExceedsNextDestinationn = false;
     private boolean clculateNextWaypoint() {
-        //if (path == null) {
-        //    path = this.getPath();
-        //}
 
-        if(tempDestination == null){
+        //MovementVector vec = movementModel.getPath(destination,speed);
+        if(state.getDestination().equals(this.location) || (distanceExceedsNextDestinationn && (path == null || path.getCoords().size() == 0))){
             state.reachedDestination();
+            distanceExceedsNextDestinationn = false;
         }
 
-        MovementVector vec = movementModel.getPath(state.getDestination(),state.getSpeed());
+        if (path == null||!path.hasNext()) {
+            Coord destination = state.getDestination();
+            double speed = state.getSpeed();
+            //state.reachedDestination();
+            if(destination != null)
+                path = movementModel.getPath(this.location, destination, speed);
+            else
+                return false;
+        }
+
         //Check path is within building
         /*if(movementModel.pathIntersects(this.location,vec.coord) || tempDestination != null){
             if(!intersectionAvoidingWay1)
@@ -234,12 +247,11 @@ public class DailyBehaviour {
         //System.out.println("intersect: "+movementModel.pathIntersects(new Coord(60,100),new Coord(60,200)));
         //System.out.println("intersect: "+movementModel.pathIntersects(new Coord(60,100),new Coord(450.0, 90.0)));
 
-        if (vec == null) {
-            return false;
-        }
-
-        this.destination = vec.coord;
-        this.speed = vec.speed;
+        this.destination = path.getNextWaypoint();
+        this.speed = path.getSpeed();
+        //System.out.println("- nextWaypoint: "+this.destination);
+        //if(this.destination == this.location)
+          //  return false;
 
 //        if (this.movListeners != null) {
 //            for (MovementListener l : this.movListeners) {

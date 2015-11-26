@@ -19,12 +19,17 @@ public class IdleState extends State {
 
     @Override
     public Coord getDestination() {
-        return dailyBehaviour.getMovement().randomCoord();
+        return null;//dailyBehaviour.getMovement().randomCoord();
     }
 
     @Override
     public void reachedDestination() {
         dailyBehaviour.changeState(new UBahnArrivalState(dailyBehaviour, this));
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override

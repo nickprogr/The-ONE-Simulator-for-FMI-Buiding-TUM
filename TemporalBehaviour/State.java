@@ -16,6 +16,7 @@ public abstract class State {
     protected Coord destination;
     protected DailyBehaviour dailyBehaviour;
     protected double speed;
+    protected boolean destinationChanged = true;
 
     protected java.util.Map<DTNHost,Double> connectedHosts = new HashMap<>();
 
@@ -32,6 +33,10 @@ public abstract class State {
     public abstract Coord getDestination();
     public abstract void reachedDestination();
 
+
+    public abstract void update();
+
+
     public abstract void initConnection(DTNHost host);
     public abstract void removeConnection(DTNHost host);
 
@@ -43,5 +48,10 @@ public abstract class State {
     public double getSpeed() {
         speed = 1;
         return speed;
+    }
+
+    public  boolean destinationChanged(){
+        //Only when changed since else a recalculation will be done regarding the movement path
+        return destinationChanged;
     }
 }

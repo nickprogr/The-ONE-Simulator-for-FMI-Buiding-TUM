@@ -162,6 +162,7 @@ public class World {
 		}
 
 		moveHosts(this.updateInterval);
+		updateMyHosts();
 		simClock.setTime(runUntil);
 
 		updateHosts();
@@ -169,6 +170,12 @@ public class World {
 		/* inform all update listeners */
 		for (UpdateListener ul : this.updateListeners) {
 			ul.updated(this.hosts);
+		}
+	}
+
+	private void updateMyHosts() {
+		for(DTNHost host : hosts) {
+			host.update();
 		}
 	}
 
