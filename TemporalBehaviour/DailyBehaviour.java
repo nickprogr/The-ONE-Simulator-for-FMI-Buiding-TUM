@@ -11,6 +11,8 @@ import java.util.*;
  * Created by Matthias on 18.11.2015.
  */
 public class DailyBehaviour {
+    //public static int counter = 0;              //hardcoded bullshit <nick>
+
     private RoomPlans roomPlans;
     private ArrayList<Lecture> selectedLectures = new ArrayList<>();
     private DTNHost host;
@@ -28,6 +30,9 @@ public class DailyBehaviour {
     private Coord location = new Coord(0,0);
     private Coord destination;
     private double speed;
+
+    private int arrivalTime = 0;
+    private int departureTime = 0;
 
     //private List<MovementListener> movListeners;
 
@@ -52,7 +57,21 @@ public class DailyBehaviour {
         //Settings s = new Settings(SimScenario.SCENARIO_NS);
         //this.movementModel = new MyProhibitedPolygonRwp(s);
         this.movementModel = movement.replicate();
-        this.state = new FreetimeState(this, new InitState(this, null));
+
+        //if(counter < 50) {
+        //    this.state = new FreetimeState(this, new InitState(this, null));
+        //}
+        //else {
+            this.state = new IdleState(this, new InitState(this, null));
+        //}
+
+        Random random = new Random();
+        arrivalTime = (random.nextInt(30) * 100) + 100;
+        departureTime = (random.nextInt(30) * 100) + 23000;
+
+
+        //counter++;  //hardoced bullshit <nick>
+
         this.roomPlans = RoomPlans.getRoomPlans();
         this.host = host;
         setInitialLocation();
@@ -75,7 +94,10 @@ public class DailyBehaviour {
                 this.location.setLocation(490.0,220.0);
                 break;
             case 2:
-                this.location.setLocation(60.0,200.0);
+                //if(state instanceof IdleState)
+                    this.location.setLocation(1300.0,0.0);
+                //else
+                //    this.location.setLocation(60.0,200.0);
                 break;
         }
     }
@@ -113,9 +135,23 @@ public class DailyBehaviour {
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
     }
 
-    public void update(){
 
+    //nick
+    public void update(){
+        //In normal conditions, all nodes will start from idle state
+        if(state instanceof IdleState && arrivalTime <= SimClock.getTime() && departureTime > SimClock.getTime())  {
+           this.movementModel.setActive(true);
+        }
+
+        //if departureTime -> depart
+        if(departureTime <= SimClock.getTime() && !(state instanceof UBahnDepartureState)) {
+            this.state = new UBahnDepartureState(this, this.state);
+            //this.destination = this.state.getDestination();
+        }
     }
+
+
+
     public void printLectures() {
         System.out.println("Host: "+host.getName());
         for(Lecture lecture : this.selectedLectures){
@@ -225,6 +261,14 @@ public class DailyBehaviour {
     private boolean intersectionAvoidingWay1 = false;
     private boolean intersectionAvoidingWay2 = false;
 
+    public MovementVector getTempDestination() {
+        return this.tempDestination;
+    }
+
+    public void setTempDestination(MovementVector vec) {
+        this.tempDestination = vec;
+    }
+
     private MovementVector calculateNonIntersectingWay1(MovementVector vec){
         //save destination
         tempDestination = vec;
@@ -270,5 +314,13 @@ public class DailyBehaviour {
 
     public void setLocation(Coord location) {
         this.location = location;
+    }
+
+    public int getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public int getDepartureTime() {
+        return departureTime;
     }
 }

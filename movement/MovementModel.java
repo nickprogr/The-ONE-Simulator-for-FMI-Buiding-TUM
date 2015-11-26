@@ -247,14 +247,31 @@ public abstract class MovementModel {
 	 */
 	public boolean isActive() {
 		/* TODO: add offset support */
-		if(isActive)
+		/*if(isActive)
 			return true;
 		//else
 		if(this.inactiveTimer && this.reactivateTime > SimClock.getTime()){
 			return false;
 		}
 		inactiveTimer = false;
-		return true;
+		return true;*/
+
+		if(this.inactiveTimer){
+			if(this.reactivateTime > SimClock.getTime()) {
+				return false;
+			}
+			else {
+				inactiveTimer = false;
+				isActive = true;
+				return true;
+			}
+		}
+		else {
+			return isActive;
+		}
+
+
+
 		//return ah.isMovementActive();
 	}
 	public void setActive(boolean active){
