@@ -99,6 +99,28 @@ public class MyProhibitedPolygonRwp
 //        this.lastWaypoint = c;
 //        return p;
 //    }
+
+    public Path getPath(double speed, Coord destination) {
+        return new Path();
+    }
+    private int getFinger(Coord position) {
+        List <Coord> finger1 = Arrays.asList(
+                new Coord( 96,36),
+                new Coord( 96,0 ),
+                new Coord( 88,0),
+                new Coord( 88,25 ),
+                new Coord( 96,36 )
+        );
+        List <Coord> finger2 = Arrays.asList(
+                new Coord( 0, 0 ),
+                new Coord( 100, 0 ),
+                new Coord( 100, 300 ),
+                new Coord( 0, 300 ),
+                new Coord( 0,0 )
+        );
+        return 1;
+    }
+
     public MovementVector getPath(Coord destination, double speed) {
         // Creates a new path from the previous waypoint to a new one.
 
