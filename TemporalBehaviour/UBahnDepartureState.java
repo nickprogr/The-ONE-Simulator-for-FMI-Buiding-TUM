@@ -9,7 +9,7 @@ import core.SimClock;
  */
 public class UBahnDepartureState extends State {
 
-    public static Coord UBAHN_COORDS = new Coord(1300.0, 0.0);
+    public static Coord UBAHN_COORDS = new Coord(400.0, 0.0);
 
     public UBahnDepartureState(DailyBehaviour dailyBehaviour, State state){
         super(dailyBehaviour, state);

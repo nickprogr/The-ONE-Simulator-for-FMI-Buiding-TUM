@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class UBahnArrivalState extends State {
 
-    public static Coord ENTRANCE_COORDS = new Coord(1000.0, 300.0);
+    public static Coord ENTRANCE_COORDS = new Coord(107,36);
 
     public UBahnArrivalState(DailyBehaviour dailyBehaviour, State state){
         super(dailyBehaviour, state);

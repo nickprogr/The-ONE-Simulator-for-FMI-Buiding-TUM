@@ -86,6 +86,7 @@ public class DailyBehaviour {
     }
     private void setEntryLocation(){
         Random rng = new Random();
+        //TODO: Random selection
         switch (2){//rng.nextInt(3)) {
             case 0:
                 this.location.setLocation(450.0, 90.0);
@@ -95,7 +96,8 @@ public class DailyBehaviour {
                 break;
             case 2:
                 //if(state instanceof IdleState)
-                    this.location.setLocation(1300.0,0.0);
+                    //this.location.setLocation(1300.0,0.0);
+                this.location.setLocation(UBahnDepartureState.UBAHN_COORDS.getX(),UBahnDepartureState.UBAHN_COORDS.getY());
                 //else
                 //    this.location.setLocation(60.0,200.0);
                 break;
@@ -216,7 +218,7 @@ public class DailyBehaviour {
 
         MovementVector vec = movementModel.getPath(state.getDestination(),state.getSpeed());
         //Check path is within building
-        if(movementModel.pathIntersects(this.location,vec.coord) || tempDestination != null){
+        /*if(movementModel.pathIntersects(this.location,vec.coord) || tempDestination != null){
             if(!intersectionAvoidingWay1)
             //move to the center of the main hall
                 vec = calculateNonIntersectingWay1(vec);
@@ -228,7 +230,7 @@ public class DailyBehaviour {
                 tempDestination = null;
             }
 
-        }
+        }*/
         //System.out.println("intersect: "+movementModel.pathIntersects(new Coord(60,100),new Coord(60,200)));
         //System.out.println("intersect: "+movementModel.pathIntersects(new Coord(60,100),new Coord(450.0, 90.0)));
 
