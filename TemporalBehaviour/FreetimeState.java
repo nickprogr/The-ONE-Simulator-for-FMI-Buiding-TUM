@@ -17,6 +17,7 @@ public class FreetimeState extends State {
     public FreetimeState(DailyBehaviour dailyBehaviour, State state){
         super(dailyBehaviour, state);
         stateEnterTime = SimClock.getTime();
+
     }
     private Coord c;
 
@@ -32,6 +33,9 @@ public class FreetimeState extends State {
     @Override
     public void reachedDestination() {
         c = dailyBehaviour.getMovement().randomCoord();
+        if(random.nextDouble() < 0.02){
+            dailyBehaviour.changeState(new StudyState(dailyBehaviour, this));
+        }
         //ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
         //if( lectures.size() > 0){
         //    dailyBehaviour.changeState(new LectureState(dailyBehaviour, this, lectures.get(0)));
@@ -46,21 +50,30 @@ public class FreetimeState extends State {
         }
     }
 
-    public int distributionTime = 200;// 200;
+    public int distributionTime = 150;// 200;
 
     @Override
     public void initConnection(DTNHost otherHost) {
         if(core.SimClock.getTime() > stateEnterTime+distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)){
-            //this.connectedHosts.put(otherHost, 500.0);		//Connection holds for 500s
-            //dailyBehaviour.getMovement().setInactive(500);
+            Random rand = new Random();
+            double randDouble = rand.nextDouble();
+            if(randDouble < 0.10) {
+                this.connectedHosts.put(otherHost, 200.0);        //Connection holds for 500s
+                dailyBehaviour.getMovement().setInactive(200);
+            }else{
+                otherHost.removeConnection(this.dailyBehaviour.getHost());
+            }
         }
 
     }
 
     @Override
     public void removeConnection(DTNHost otherHost) {
-        if(core.SimClock.getTime() > distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)) {
-            //this.connectedHosts.remove(otherHost);
+        //if(core.SimClock.getTime() > distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)) {
+        this.connectedHosts.remove(otherHost);
+        if(connectedHosts.size() == 0){
+            this.dailyBehaviour.getMovement().setActive(true);
         }
+        //}
     }
 }

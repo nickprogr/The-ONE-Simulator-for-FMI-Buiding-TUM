@@ -20,7 +20,6 @@ public class LectureState extends State {
 
     @Override
     public Coord getDestination() {
-
             this.dailyBehaviour.getHost().setName("Lecture");
             destinationChanged = false;
             return lecture.getCoord();

@@ -27,6 +27,8 @@ public class UBahnArrivalState extends State {
     public void reachedDestination() {
         //dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, new InitState(dailyBehaviour, null)));
         dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, this));
+
+        //dailyBehaviour.changeState(new StudyState(dailyBehaviour,this));
         //dailyBehaviour.changeState(new TestRoomFinger11(dailyBehaviour, this));
 
     }

@@ -17,6 +17,7 @@ public abstract class State {
     protected DailyBehaviour dailyBehaviour;
     protected double speed;
     protected boolean destinationChanged = true;
+    protected Random random = new Random();
 
     protected java.util.Map<DTNHost,Double> connectedHosts = new HashMap<>();
 

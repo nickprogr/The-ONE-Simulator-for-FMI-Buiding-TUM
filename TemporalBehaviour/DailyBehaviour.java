@@ -68,7 +68,7 @@ public class DailyBehaviour {
 
         Random random = new Random();
         //arrivalTime = 0;
-        arrivalTime = (random.nextInt(30) * 100) + 100;
+        arrivalTime = (random.nextInt(20) * 100) + 100;
         departureTime = (random.nextInt(30) * 100) + 23000;
         //departureTime = 999999999;
 
@@ -124,19 +124,19 @@ public class DailyBehaviour {
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block2
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK2);
-        if(lectureList.size() > 0)
+        if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block3
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK3);
-        if(lectureList.size() > 0)
+        if(lectureList.size() > 0 && random.nextDouble()<0.5)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block4
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK4);
-        if(lectureList.size() > 0)
+        if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block5
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK5);
-        if(lectureList.size() > 0)
+        if(lectureList.size() > 0 && random.nextDouble()<0.2)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
     }
 
