@@ -45,7 +45,7 @@ public class CafeteriaState extends State {
     public int distributionTime = 200;
 
     @Override
-    public void initConnection(DTNHost otherHost) {
+    public void addConnection(DTNHost otherHost) {
         if(core.SimClock.getTime() > stateEnterTime+distributionTime && dailyBehaviour.getHost().getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT) && otherHost.getPersonType().equals(dailyBehaviour.getHost().TYPE_STUDENT)){
             //this.connectedHosts.put(otherHost,500.0);		//Connection holds for 500s
             //dailyBehaviour.getMovement().setInactive(500);

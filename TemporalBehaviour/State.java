@@ -38,7 +38,7 @@ public abstract class State {
     public abstract void update();
 
 
-    public abstract void initConnection(DTNHost host);
+    public abstract void addConnection(DTNHost socialKnownHost);
     public abstract void removeConnection(DTNHost host);
 
     public double suggestTimeToMeet(DTNHost other) {

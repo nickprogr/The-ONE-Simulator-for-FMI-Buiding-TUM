@@ -57,7 +57,7 @@ public class StudyState extends State {
 
 
     @Override
-    public void initConnection(DTNHost host) {
+    public void addConnection(DTNHost host) {
 
     }
 

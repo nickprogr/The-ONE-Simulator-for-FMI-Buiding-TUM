@@ -31,7 +31,7 @@ public class InitState extends State {
     }
 
     @Override
-    public void initConnection(DTNHost otherHost) {
+    public void addConnection(DTNHost otherHost) {
     }
 
     @Override

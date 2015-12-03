@@ -4,6 +4,7 @@
  */
 package core;
 
+import SocialBehaviour.SocialCliques;
 import input.EventQueue;
 import input.EventQueueHandler;
 
@@ -161,6 +162,8 @@ public class SimScenario implements Serializable {
 		this.worldSizeY = worldSize[1];
 
 		createHosts();
+		SocialCliques sc = new SocialCliques();
+		sc.initCliques(hosts);
 		
 		this.world = new World(hosts, worldSizeX, worldSizeY, updateInterval, 
 				updateListeners, simulateConnections, 

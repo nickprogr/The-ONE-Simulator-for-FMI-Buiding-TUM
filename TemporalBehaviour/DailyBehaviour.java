@@ -1,9 +1,9 @@
 package TemporalBehaviour;
 
+import SocialBehaviour.SocialCliques;
 import core.*;
 import movement.MovementModel;
 import movement.MovementVector;
-import movement.MyProhibitedPolygonRwp;
 import movement.Path;
 
 import java.util.*;
@@ -48,7 +48,9 @@ public class DailyBehaviour {
     }
 
     public void addConnection(DTNHost host){
-        state.initConnection(host);
+        //Only forward connection if they really know each other
+        if(SocialCliques.socialCliques.haveSharedGroup(host,this.host))
+            state.addConnection(host);
     }
     public void removeConnection(DTNHost host){
         state.removeConnection(host);

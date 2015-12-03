@@ -33,7 +33,7 @@ public class IdleState extends State {
     }
 
     @Override
-    public void initConnection(DTNHost otherHost) { /* DO NOTHING */}
+    public void addConnection(DTNHost otherHost) { /* DO NOTHING */}
 
     @Override
     public void removeConnection(DTNHost otherHost) { /* DO NOTHING */}
