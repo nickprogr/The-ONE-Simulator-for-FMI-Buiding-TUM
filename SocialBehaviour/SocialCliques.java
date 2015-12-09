@@ -59,8 +59,8 @@ public class SocialCliques {
         for(int i: groups.keySet()) {
             if (random.nextDouble() < 0.4) {
                 //Select Block
-                int startTime = random.nextInt(12*60*60)+8*60*60;//From 8am to 8pm
-                double time = random.nextDouble()*90;
+                double startTime = (random.nextDouble()*12*60*60)+8*60*60;//From 8am to 8pm
+                double time = random.nextDouble()*90*60;
 
                 for (DTNHost host : groups.get(i)) {
                     host.getDailyBehaviour().addDate(new GroupWork(startTime, time, getGroupWorkPlace(), i));

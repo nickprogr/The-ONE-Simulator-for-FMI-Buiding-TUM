@@ -61,24 +61,31 @@ public class DailyBehaviour {
         return state;
     }
     public void setState(State state) {
-        this.state = state;
+        if (this.state == null || this.state.getID() != state.getID()) {
+            this.state = state;
+            this.destination = null;        //To stop current movement
+            this.path = null;
+        }
     }
 
     public void addConnection(DTNHost host){
         //Only forward connection if they really know each other
+        //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
         if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
+            if(!(state instanceof LectureState) && !(host.getDailyBehaviour().getState() instanceof LectureState)) {
             //       if(state instanceof FreetimeState) {
 
-//            if (SocialCliques.socialCliques.haveSharedGroup(host, this.host)) {   //TODO: Add
-            Random random = new Random();
+    //            if (SocialCliques.socialCliques.haveSharedGroup(host, this.host)) {   //TODO: Add
+                Random random = new Random();
 
-            if (this.group.getSize() <= 1) {//If not already in a group
+                if (this.group.getSize() <= 1) {//If not already in a group
 
-                if (random.nextDouble() < 0.1) {
-                    System.out.println("-- addGroup");
-                    host.getDailyBehaviour().group.addMember(this.host);
-                    this.group = host.getDailyBehaviour().group;
-                    group.setInactive(50);
+                    if (random.nextDouble() < 0.1) {
+                        System.out.println("-- addGroup");
+                        host.getDailyBehaviour().group.addMember(this.host);
+                        this.group = host.getDailyBehaviour().group;
+                        group.setInactive(50);
+                    }
                 }
             }
         }
@@ -104,7 +111,7 @@ public class DailyBehaviour {
         //    this.state = new FreetimeState(this, new InitState(this, null));
         //}
         //else {
-        this.state = new IdleState();
+        setState(new IdleState());
         //}
 
 
@@ -114,8 +121,10 @@ public class DailyBehaviour {
         this.host = host;
 
         this.roomPlans = RoomPlans.getRoomPlans();
-        this.chooseLectures();        //Select Lectures taken through out the day
-        //this.printLectures();
+        //this.chooseLectures();        //Select Lectures taken through out the day
+        addDate(new Lecture(50, 200, new Coord(118,42)));
+        addDate(new Lecture(500, 200, new Coord(28,15)));
+        this.printLectures();
 
 
         setInitialLocation();
@@ -123,9 +132,6 @@ public class DailyBehaviour {
         group = new Group(host);
     }
 
-    public void changeState(State state){
-        this.state = state;
-    }
     public DTNHost getHost(){
         return host;
     }
@@ -158,42 +164,66 @@ public class DailyBehaviour {
 
     private boolean firstUpdate = true;
 
-    public void update(){
-        if(firstUpdate){
+    public void update() {
+        if (firstUpdate) {
             firstUpdate = false;
             //Calculate Arrival and Departure Time
             calculateArrivalAndDepartureTimes();
         }
 
         //this.printLectures();
-        if(group.isLeader(this.host)) {
-            state = state.getState(); //TODO: Newly added
-        }else {
-            state = group.getState();
+
+        State newState;
+        if (group.isLeader(this.host)) {
+            newState = state.getState();
+        } else {
+            newState = group.getState();
         }
+        //System.out.println("c "+group.getSize());
+
+        if (state.getID() != newState.getID() && group.getSize() > 1) { //&& group.getSize() > 1){
+            //Consider to change group
+            Random rand = new Random();
+            if(rand.nextDouble()<0.5) {
+                group.removeMember(this.host);          //TODO: This test removes always
+                setState(new FreetimeState());       //TODO: List probability and State
+                group = new Group(this.host);
+            }
+        }else{
+            this.setState(newState);
+        }
+
+
+        if(!(state instanceof LectureState)&&!(state instanceof IdleState)&&!(state instanceof ArrivalState)&&!(state instanceof DepartureState)) {
+            ArrayList<Lecture> lectures = this.getLecturesAtTime(SimClock.getTime());
+            if (lectures.size() > 0) {
+                group.removeMember(this.host);
+                this.setState(new LectureState(lectures.get(lectures.size()-1)));       //Always take lecture from behind since first priority are workGroups and afterwards Lectures
+                //this.destination = null;        //To stop current movement
+                group = new Group(this.host);
+            }
+        }
+
         //In normal conditions, all nodes will start from idle state
         if(state instanceof IdleState && arrivalTime <= SimClock.getTime() && departureTime > SimClock.getTime())  {
             this.location.setLocation( new ArrivalState(arrivalType).getStartPosition());
-            state = new ArrivalState(arrivalType);      //state.reachedDestination();
-
+            setState(new ArrivalState(arrivalType));      //state.reachedDestination();
 
             //this.location = state.getStartPosition();
             this.movementModel.setActive(true);
-
         }
 
         //if departureTime -> depart
         if(departureTime <= SimClock.getTime() && !(state instanceof DepartureState)&&!(state instanceof IdleState)) {
             group.removeMember(this.host);
-            this.state = new DepartureState(arrivalType);
+            setState(new DepartureState(arrivalType));
             group = new Group(this.host);
-            //this.destination = this.state.getDestination();
         }
         state.update();
     }
 
     private void calculateArrivalAndDepartureTimes() {
-        Random random = new Random();
+        //Random random = new Random();
         //arrivalTime = 0;
         double firstLecture = 0;
         double lastLecture = 0;
@@ -205,8 +235,9 @@ public class DailyBehaviour {
                 lastLecture = lecture.getEndTime();
             }
         }
-        arrivalTime = 200;//firstLecture;
-        departureTime = 2000;//lastLecture;
+        arrivalTime = firstLecture;//200;//
+        departureTime = lastLecture;//200000;//
+        printLectures();
     }
 
 
@@ -226,11 +257,6 @@ public class DailyBehaviour {
             this.location = new Coord(200,200);
             return;
         }
-        /*if(group.isLeader(this.host)) {
-            //state = state.getState();
-        }else {
-            //state = group.getState();
-        }*/
 
         double possibleMovement;
         double distance;
@@ -239,6 +265,8 @@ public class DailyBehaviour {
         if (!this.isMovementActive() || SimClock.getTime() < this.nextPathAvailable()) {
             return;
         }
+        //if(SimClock.getTime()>=700)
+            //System.out.println("700");
 
         if (this.destination == null || state.destinationChanged()) {
             if (!clculateNextWaypoint()) {
@@ -283,16 +311,24 @@ public class DailyBehaviour {
         //}
 
         //MovementVector vec = movementModel.getPath(destination,speed);
-        if(state.getDestination().equals(this.location) || (distanceExceedsNextDestinationn && (path == null || path.getCoords().size() == 0))){
+        //System.out.println("locations are equal: "+state.getDestination().equals(this.location));
+        //System.out.println("distexeedsnextdest: "+distanceExceedsNextDestinationn);
+        //System.out.println("path==null: "+(path == null)) ;
+        //if(path!=null)
+        //System.out.println("path.size ==0: "+(path.getCoords().size() == 0));
+
+        if(state.getDestination().equals(this.location)){// || (distanceExceedsNextDestinationn && (path == null || path.getCoords().size() == 0))){
             state.reachedDestination();
             if(group.isLeader(this.host)) {
-                state = state.getState(); //TODO: Newly added
-                if(state instanceof IdleState)
-                    return false;
+                setState(state.getState());
+               // if(state instanceof IdleState)
+               //     return false;
             }else {
-                state = group.getState();
+                setState(group.getState());
                 return false;
             }
+            if(!state.isActive)
+                return false;
             distanceExceedsNextDestinationn = false;
         }
 
@@ -375,8 +411,8 @@ public class DailyBehaviour {
     }
 
     public boolean isMovementActive() {
-        //System.out.println("name: "+host.getName()+" isMovementActive: "+movementModel.isActive());
-        System.out.println(host.getName()+" movementActive: "+(state.isActive() && movementModel.isActive()));
+        //if(state instanceof LectureState)
+        //    System.out.println(host.getName()+" state Active: "+(state.isActive()));
         return state.isActive() && movementModel.isActive();
         //return movementModel.isActive();
     }

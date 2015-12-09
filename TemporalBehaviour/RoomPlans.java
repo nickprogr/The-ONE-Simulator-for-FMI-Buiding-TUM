@@ -58,10 +58,10 @@ public class RoomPlans {
             }
             int duration = random.nextInt(2);
             switch (duration) {
-                case 1:
+                case 0:
                     duration = 60*60;
                     break;
-                case 2:
+                case 1:
                     duration = 90*60;
                     break;
                //}

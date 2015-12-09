@@ -26,30 +26,32 @@ public class FreetimeState extends State {
     @Override
     public Coord getDestination() {
         destinationChanged = false;
-        if(c == null)
-            reachedDestination();   //generate new random position
+        if(c == null) {
+            //generate new random position
+            double rand = random.nextDouble();
+            if(rand < 0.3){
+                c = new Coord(22,35);
+            }else if(rand < 0.6) {
+                c = new Coord(107, 50);
+            }else{
+                c = new Coord(83, 65);
+            }
+            double dx,dy;
+            do {
+                double r = random.nextDouble();
+                dx = r * 2 - 1; //+-1m
+                r = random.nextDouble();
+                dy = r * 2 - 1; //+-1m
+            } while (false);     //Minimal distance = 0.5m
+            c = new Coord(c.getX() + dx, c.getY() + dy);
+        }
         return c;
     }
 
     @Override
     public void reachedDestination() {
         //c = dailyBehaviour.getMovement().randomCoord();
-        double rand = random.nextDouble();
-        if(rand < 0.3){
-            c = new Coord(22,35);
-        }else if(rand < 0.6) {
-            c = new Coord(107, 50);
-        }else{
-            c = new Coord(83, 65);
-        }
-        double dx,dy;
-        do {
-            double r = random.nextDouble();
-            dx = r * 2 - 1; //+-1m
-            r = random.nextDouble();
-            dy = r * 2 - 1; //+-1m
-        } while (false);     //Minimal distance = 0.5m
-        c = new Coord(c.getX() + dx, c.getY() + dy);
+        state = new FreetimeState();
 
         if(random.nextDouble() < 0.02){
             //dailyBehaviour.changeState(new StudyState(dailyBehaviour, this));
@@ -62,10 +64,7 @@ public class FreetimeState extends State {
 
     @Override
     public void update() {
-        //ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
-        //if( lectures.size() > 0){
-        //    dailyBehaviour.changeState(new LectureState(dailyBehaviour, this, lectures.get(0)));
-        //}
+
     }
 
     public int distributionTime = 150;// 200;

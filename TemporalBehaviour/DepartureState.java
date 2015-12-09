@@ -48,7 +48,7 @@ public class DepartureState extends State {
         private boolean reachedDestination = false;
         @Override
         public Coord getDestination() {
-            System.out.println("DepartureState: getDestination "+reachedDestination);
+            System.out.println("getDestination");
             if(reachedDestination){
                 return null;
             }
@@ -69,27 +69,18 @@ public class DepartureState extends State {
                 //}
                 coordDestination = new Coord(coordDestination.getX() + dx, coordDestination.getY() + dy);
             }
+            System.out.println("coord "+coordDestination);
             return coordDestination;
             //return ENTRANCE_COORDS;
         }
 
         @Override
         public void reachedDestination() {
+            System.out.println("reachedDestination");
             reachedDestination = true;
-            System.out.println("DepartureState: reachedDestination");
 
             isActive = false;
             state = new IdleState();
-
-            //entranceReached = true;
-            //destinationChanged = true;
-            //dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, new InitState(dailyBehaviour, null)));
-
-            //state = new FreetimeState();
-
-            //dailyBehaviour.changeState(new StudyState(dailyBehaviour,this));
-            //dailyBehaviour.changeState(new TestRoomFinger11(dailyBehaviour, this));
-
         }
 
 

@@ -13,19 +13,29 @@ import java.util.Random;
  */
 public abstract class State {
 
+    protected static int state_id = 0;
     protected Coord destination;
     protected double speed;
     protected boolean destinationChanged = true;
     protected Random random = new Random();
     protected State state;
     protected boolean isActive = true;
+    protected int id;
 
     public State(){
+        state_id++;
+        id = state_id;
+    }
+    public int getID(){
+       return id;
     }
 
     public abstract Coord getDestination();
     public abstract void reachedDestination();
     public State getState(){
+        if(state == null){
+            System.out.println("State is null! Please initialize state = this in constructor");
+        }
         return state;
     }
     public boolean isActive(){

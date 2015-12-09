@@ -103,7 +103,7 @@ public class MyProhibitedPolygonRwp
 
     public static Coord ENTRANCE_WEST = new Coord(16, 41);
     public static Coord ENTRANCE_NORTH = new Coord(107, 36);
-    public static Coord ENTRANCE_EAST = new Coord(120, 52);
+    public static Coord ENTRANCE_EAST = new Coord(117, 50);
     public static Coord UBAHN_COORDS = new Coord(150, 0);
     public static Coord BIKE_NORTH_COORDS = new Coord(100, 5);
     public static Coord BIKE_WEST_COORDS = new Coord(0, 41);
