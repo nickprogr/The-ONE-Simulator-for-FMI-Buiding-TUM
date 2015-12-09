@@ -68,10 +68,12 @@ public class LectureState extends State {
                 double rand = random.nextDouble();
                 State newState;
                 if(rand < 0.10)
-
                     newState = new ToiletState();
-                else
+                else if(rand < .5 && rand < .1) {
+                    newState = new WaitState();
+                }else{
                     newState = new FreetimeState();
+                }
                 this.state = newState;
             }
         }

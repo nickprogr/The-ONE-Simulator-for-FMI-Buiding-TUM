@@ -48,19 +48,18 @@ public class DepartureState extends State {
         private boolean reachedDestination = false;
         @Override
         public Coord getDestination() {
-            System.out.println("getDestination");
+            destinationChanged = false;
             if(reachedDestination){
                 return null;
             }
-            destinationChanged = false;
             if(coordDestination == null) {
                 double dx = 0;
                 double dy = 0;
                 do {
                     double r = random.nextDouble();
-                    dx = r * 2 - 1; //+-1m
+                    //dx = r * 2 - 1; //+-1m            //Problem if value is negative!! Routing does not work correct anymore.
                     r = random.nextDouble();
-                    dy = r * 2 - 1; //+-1m
+                    //dy = r * 2 - 1; //+-1m
                 } while (false);     //Minimal distance = 0.5m
                 /*if(!entranceReached) {
                     coordDestination = getEntrancePos();
@@ -69,7 +68,6 @@ public class DepartureState extends State {
                 //}
                 coordDestination = new Coord(coordDestination.getX() + dx, coordDestination.getY() + dy);
             }
-            System.out.println("coord "+coordDestination);
             return coordDestination;
             //return ENTRANCE_COORDS;
         }

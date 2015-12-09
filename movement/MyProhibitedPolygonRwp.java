@@ -1,5 +1,6 @@
 package movement;
 
+import TemporalBehaviour.WaitState;
 import core.Coord;
 import core.Settings;
 
@@ -109,9 +110,17 @@ public class MyProhibitedPolygonRwp
     public static Coord BIKE_EAST_COORDS = new Coord(140, 51);
     @Override
     public Path getPath(Coord source, Coord destination, double speed) {
+
         Path p = new Path();
         int areaSource = getArea(source);
         int areaDestination = getArea(destination);
+
+        //if(host != null && host.getDailyBehaviour() != null && host.getDailyBehaviour().getState() != null && host.getDailyBehaviour().getState() instanceof WaitState){
+            //System.out.println("Source: "+source+" Aarea "+areaSource);
+            //System.out.println("Destination: "+destination+" Area "+areaDestination);
+
+        //}
+
         if (areaSource == areaDestination) {       //move in same finger directly
             p.addWaypoint(destination, speed);
             return p;
@@ -143,6 +152,7 @@ public class MyProhibitedPolygonRwp
         }
         if (2 <= areaSource && areaSource <= 13) {      //Move from some Finger, Lecture Hall or Library, not necessary if you are already in the main hall
             p.addWaypoint(getAreaEntrance(areaSource),speed);
+            System.out.println("Move to entrance of finger "+getAreaEntrance(areaSource));
         }
         if (1 <= areaDestination && areaDestination <= 13){ //Move to Another place inside the building
             p.addWaypoint(getAreaEntrance(areaDestination),speed);

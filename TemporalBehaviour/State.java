@@ -49,7 +49,7 @@ public abstract class State {
     public abstract void removeConnection(DTNHost host);
 
     public double getSpeed() {
-        speed = 1;
+        speed = 1.5;
         return speed;
     }
 

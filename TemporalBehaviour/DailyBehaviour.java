@@ -2,6 +2,7 @@ package TemporalBehaviour;
 
 import SocialBehaviour.Group;
 //import TemporalBehaviour.states.UBahnDepartureState;
+import SocialBehaviour.SocialCliques;
 import core.*;
 import movement.MovementModel;
 import movement.MovementVector;
@@ -63,6 +64,7 @@ public class DailyBehaviour {
     public void setState(State state) {
         if (this.state == null || this.state.getID() != state.getID()) {
             this.state = state;
+            System.out.println("state "+state);
             this.destination = null;        //To stop current movement
             this.path = null;
         }
@@ -71,22 +73,23 @@ public class DailyBehaviour {
         }
     }
 
-    public void addConnection(DTNHost host){
+    public void addConnection(DTNHost otherHost) {
         //Only forward connection if they really know each other
         //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
-        if(state.enableConnections() && host.getDailyBehaviour().getState().enableConnections()){
-        //       if(state instanceof FreetimeState) {
+        if (state.enableConnections() && otherHost.getDailyBehaviour().getState().enableConnections()) {
+            //       if(state instanceof FreetimeState) {
 
-//            if (SocialCliques.socialCliques.haveSharedGroup(host, this.host)) {   //TODO: Add
-            Random random = new Random();
+            if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
+                Random random = new Random();
 
-            if (this.group.getSize() <= 1) {//If not already in a group
+                if (this.group.getSize() <= 1) {//If not already in a group
 
-                if (random.nextDouble() < 0.1) {
-                    System.out.println("-- addGroup");
-                    host.getDailyBehaviour().group.addMember(this.host);
-                    this.group = host.getDailyBehaviour().group;
-                    group.setInactive(50);
+                    if (random.nextDouble() < 0.1) {
+                        System.out.println("-- addGroup");
+                        otherHost.getDailyBehaviour().group.addMember(this.host);
+                        this.group = otherHost.getDailyBehaviour().group;
+                        group.setInactive(50);
+                    }
                 }
             }
         }
@@ -116,9 +119,9 @@ public class DailyBehaviour {
         this.host = host;
 
         this.roomPlans = RoomPlans.getRoomPlans();
-        //this.chooseLectures();        //Select Lectures taken through out the day
-        addDate(new Lecture(50, 200, new Coord(118,42)));
-        addDate(new Lecture(500, 200, new Coord(28,15)));
+        this.chooseLectures();        //Select Lectures taken through out the day
+        //addDate(new Lecture(50, 200, new Coord(28,15)));
+        //addDate(new Lecture(500, 200, new Coord(118,42)));
         this.printLectures();
 
 
@@ -301,17 +304,6 @@ public class DailyBehaviour {
     private boolean distanceExceedsNextDestinationn = false;
     private boolean clculateNextWaypoint() {
 
-        //if(!group.isLeader(host)){
-        //    return group.getDestination();
-        //}
-
-        //MovementVector vec = movementModel.getPath(destination,speed);
-        //System.out.println("locations are equal: "+state.getDestination().equals(this.location));
-        //System.out.println("distexeedsnextdest: "+distanceExceedsNextDestinationn);
-        //System.out.println("path==null: "+(path == null)) ;
-        //if(path!=null)
-        //System.out.println("path.size ==0: "+(path.getCoords().size() == 0));
-
         if(state.getDestination().equals(this.location)){// || (distanceExceedsNextDestinationn && (path == null || path.getCoords().size() == 0))){
             state.reachedDestination();
             if(group.isLeader(this.host)) {
@@ -327,12 +319,14 @@ public class DailyBehaviour {
             distanceExceedsNextDestinationn = false;
         }
 
-        if (path == null||!path.hasNext()) {
+        if (path == null || !path.hasNext()) {
             Coord destination = state.getDestination();
             double speed = state.getSpeed();
             //state.reachedDestination();
-            if(destination != null)
+            if(destination != null){
                 path = movementModel.getPath(this.location, destination, speed);
+                System.out.println("Path");
+                System.out.println(path);}
             else
                 return false;
         }
