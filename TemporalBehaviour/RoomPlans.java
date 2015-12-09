@@ -5,6 +5,7 @@ import core.Coord;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by Matthias on 18.11.2015.
@@ -31,19 +32,43 @@ public class RoomPlans {
     }
     public static void initRooms(){
         //HOERSAAL1
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1, DailyBehaviour.LECTURE_LENGHT, HOERSAAL1));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK2, DailyBehaviour.LECTURE_LENGHT, HOERSAAL1));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK3, DailyBehaviour.LECTURE_LENGHT, HOERSAAL1));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK4, DailyBehaviour.LECTURE_LENGHT, HOERSAAL1));
+        initRoom(HOERSAAL1);
         //ROOMFINGER11
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER11));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK4, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER11));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK5, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER11));
+        initRoom(ROOMFINGER11);
         //ROOMFINGER8
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER8));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK2, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER8));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK3, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER8));
-        roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK4, DailyBehaviour.LECTURE_LENGHT, ROOMFINGER8));
+        initRoom(ROOMFINGER8);
+    }
+
+    private static void initRoom(Coord roomCoord) {
+        for(int i = 0; i<=4;i++) {                  //5 Blocks per day
+
+            Random random = new Random();
+            //if(random.nextDouble() < 3/5) {         //3 blocks should be held per room
+            int startTime = random.nextInt(3);
+            switch (startTime) {
+                case 1:
+                    startTime = 0;
+                    break;
+                case 2:
+                    startTime = 15*60;
+                    break;
+                case 3:
+                    startTime = 30*60;
+                    break;
+            }
+            int duration = random.nextInt(2);
+            switch (duration) {
+                case 1:
+                    duration = 60*60;
+                    break;
+                case 2:
+                    duration = 90*60;
+                    break;
+               //}
+            }
+            roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1+DailyBehaviour.BLOCK_LENGTH*i+startTime, duration, roomCoord));
+
+        }
     }
 
     public void addLecture(Lecture lecture){

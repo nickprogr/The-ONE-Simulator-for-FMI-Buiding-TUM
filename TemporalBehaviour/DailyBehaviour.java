@@ -5,6 +5,7 @@ import SocialBehaviour.Group;
 import core.*;
 import movement.MovementModel;
 import movement.MovementVector;
+import movement.MyProhibitedPolygonRwp;
 import movement.Path;
 
 import java.util.*;
@@ -13,6 +14,7 @@ import java.util.*;
  * Created by Matthias on 18.11.2015.
  */
 public class DailyBehaviour {
+    public static final double BLOCK_LENGTH = 2*60*60 ;
     //public static int counter = 0;              //hardcoded bullshit <nick>
 
     private RoomPlans roomPlans;
@@ -20,7 +22,7 @@ public class DailyBehaviour {
     private DTNHost host;
     private MovementModel movementModel;
 
-    public static double START_BLOCK1 = 2000;//2000;
+    public static double START_BLOCK1 = 200;//8*60*60;
     public static double HOUR = 2000;//3200;
     public static double START_BLOCK2 = 2*HOUR+START_BLOCK1;
     public static double START_BLOCK3 = 2*HOUR+START_BLOCK2;
@@ -29,19 +31,27 @@ public class DailyBehaviour {
     public static double START_BLOCK6 = 2*HOUR+START_BLOCK5;
     public static double LECTURE_LENGHT = 1.0*HOUR;//1.5*HOUR;
 
+    public static final int ARRIVAL_UBAHN_NORTH = 0;
+    public static final int ARRIVAL_ELSE_NORTH = 1;
+    public static final int ARRIVAL_EAST = 2;
+    public static final int ARRIVAL_WEST = 3;
+
     private Coord location = new Coord(0,0);
     private Coord destination;
     private double speed;
 
-    private int arrivalTime = 0;
-    private int departureTime = 0;
+    private double arrivalTime = 0;
+    private double departureTime = 0;
 
 
     private Group group;
+    private int arrivalType;
 
     //private List<MovementListener> movListeners;
 
-
+    public void addDate(Lecture lecture){
+        selectedLectures.add(lecture);
+    }
     public MovementModel getMovement(){
         return movementModel;
     }
@@ -56,20 +66,22 @@ public class DailyBehaviour {
 
     public void addConnection(DTNHost host){
         //Only forward connection if they really know each other
- //       if(state instanceof FreetimeState) {
+        if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
+            //       if(state instanceof FreetimeState) {
 
 //            if (SocialCliques.socialCliques.haveSharedGroup(host, this.host)) {   //TODO: Add
-        Random random = new Random();
+            Random random = new Random();
 
-                if (this.group.getSize() <= 1) {//If not already in a group
+            if (this.group.getSize() <= 1) {//If not already in a group
 
-                    if (random.nextDouble() < 0.1) {
-                        System.out.println("-- addGroup");
-                        host.getDailyBehaviour().group.addMember(this.host);
-                        this.group = host.getDailyBehaviour().group;
-                        group.setInactive(200);
-                    }
+                if (random.nextDouble() < 0.1) {
+                    System.out.println("-- addGroup");
+                    host.getDailyBehaviour().group.addMember(this.host);
+                    this.group = host.getDailyBehaviour().group;
+                    group.setInactive(50);
                 }
+            }
+        }
 
  //               }
                 //state.addConnection(host);
@@ -82,62 +94,34 @@ public class DailyBehaviour {
         state.removeConnection(host);
     }
 
-    public DailyBehaviour(DTNHost host, MovementModel movement, List<MovementListener> movLs){
+    public DailyBehaviour(DTNHost host, MovementModel movement, List<MovementListener> movLs) {
         //Settings s = new Settings(SimScenario.SCENARIO_NS);
         //this.movementModel = new MyProhibitedPolygonRwp(s);
         this.movementModel = movement.replicate();
+
 
         //if(counter < 50) {
         //    this.state = new FreetimeState(this, new InitState(this, null));
         //}
         //else {
-            this.state = new IdleState();
+        this.state = new IdleState();
         //}
-
-        Random random = new Random();
-        //arrivalTime = 0;
-       // arrivalTime = (random.nextInt(20) * 100) + 100;       //TODO:Add
-        //departureTime = (random.nextInt(30) * 100) + 23000;
-        departureTime = random.nextInt(1000) + 500;
-        //departureTime = 999999999;
 
 
         //counter++;  //hardoced bullshit <nick>
 
-        this.roomPlans = RoomPlans.getRoomPlans();
+
         this.host = host;
+
+        this.roomPlans = RoomPlans.getRoomPlans();
+        this.chooseLectures();        //Select Lectures taken through out the day
+        //this.printLectures();
+
+
         setInitialLocation();
 
-        group  = new Group(host);
-
-
-//        this.movListeners = movLs;
-//        if (movLs != null) { // inform movement listeners about the location
-//            for (MovementListener l : movLs) {
-//                l.initialLocation(host, this.location);
-//            }
-//        }
+        group = new Group(host);
     }
-    private void setEntryLocation(){
-        Random rng = new Random();
-        //TODO: Random selection
-        switch (2){//rng.nextInt(3)) {
-            case 0:
-                this.location.setLocation(450.0, 90.0);
-                break;
-            case 1:
-                this.location.setLocation(490.0,220.0);
-                break;
-            case 2:
-                //if(state instanceof IdleState)
-                    //this.location.setLocation(1300.0,0.0);
-                this.location.setLocation(UBahnDepartureState.UBAHN_COORDS.getX(),UBahnDepartureState.UBAHN_COORDS.getY());
-                //else
-                //    this.location.setLocation(60.0,200.0);
-                break;
-        }
-    }
-
 
     public void changeState(State state){
         this.state = state;
@@ -151,29 +135,37 @@ public class DailyBehaviour {
 
         //block1
         ArrayList<Lecture> lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1);
-        if(lectureList.size() > 0)
+        if(lectureList.size() > 0 && random.nextDouble()<0.5)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block2
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK2);
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*60*60);
         if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block3
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK3);
-        if(lectureList.size() > 0 && random.nextDouble()<0.5)
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*2*60*60);
+        if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block4
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK4);
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+3*2*60*60);
         if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block5
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK5);
-        if(lectureList.size() > 0 && random.nextDouble()<0.2)
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+4*2*60*60);
+        if(lectureList.size() > 0 && random.nextDouble()<0.5)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
     }
 
 
-    //nick
+    private boolean firstUpdate = true;
+
     public void update(){
+        if(firstUpdate){
+            firstUpdate = false;
+            //Calculate Arrival and Departure Time
+            calculateArrivalAndDepartureTimes();
+        }
+
+        //this.printLectures();
         if(group.isLeader(this.host)) {
             state = state.getState(); //TODO: Newly added
         }else {
@@ -181,21 +173,41 @@ public class DailyBehaviour {
         }
         //In normal conditions, all nodes will start from idle state
         if(state instanceof IdleState && arrivalTime <= SimClock.getTime() && departureTime > SimClock.getTime())  {
-            state.reachedDestination();
+            this.location.setLocation( new ArrivalState(arrivalType).getStartPosition());
+            state = new ArrivalState(arrivalType);      //state.reachedDestination();
+
+
+            //this.location = state.getStartPosition();
             this.movementModel.setActive(true);
+
         }
 
         //if departureTime -> depart
-        if(departureTime <= SimClock.getTime() && !(state instanceof UBahnDepartureState)) {
+        if(departureTime <= SimClock.getTime() && !(state instanceof DepartureState)&&!(state instanceof IdleState)) {
             group.removeMember(this.host);
-
-            this.state = new UBahnDepartureState();
+            this.state = new DepartureState(arrivalType);
             group = new Group(this.host);
             //this.destination = this.state.getDestination();
         }
         state.update();
     }
 
+    private void calculateArrivalAndDepartureTimes() {
+        Random random = new Random();
+        //arrivalTime = 0;
+        double firstLecture = 0;
+        double lastLecture = 0;
+        for(Lecture lecture : selectedLectures){
+            if(firstLecture == 0 || firstLecture > lecture.getStartTime()){
+                firstLecture = lecture.getStartTime();
+            }
+            if(lastLecture == 0 || lastLecture < lecture.getEndTime()){
+                lastLecture = lecture.getEndTime();
+            }
+        }
+        arrivalTime = 200;//firstLecture;
+        departureTime = 2000;//lastLecture;
+    }
 
 
     public void printLectures() {
@@ -209,34 +221,17 @@ public class DailyBehaviour {
 
     public void move(double timeIncrement){
         update();
-        if(state instanceof UBahnDepartureState){
-        }
-        if(group.isLeader(this.host)) {
-
-            state = state.getState(); //TODO: Newly added
-        }else {
-            state = group.getState();
-        }
-
-        /*if(!group.isLeader(this.host)){
-            this.location = group.getLocation();
-            //this.location.translate(0.5,0.5);
-            if(dx == 0 || dy == 0) {
-                do {
-                    Random rand = new Random();
-                    double r = rand.nextDouble();
-                    dx = r * 4 - 1; //+-1m
-                    //r = rand.nextDouble();
-                    dy = r * 4 - 1; //+-1m
-                }while(!(dx < 0.5 && dx > -0.5)&&!(dy < 0.5 && dy > -0.5));     //Minimal distance = 0.5m
-            }
-            this.location = new Coord(this.location.getX()+dx,this.location.getY()+dy);
-           // System.out.println("Location: "+this.location);
+        if(state instanceof IdleState){
+            //System.out.println("--> IdleState");
+            this.location = new Coord(200,200);
             return;
-        }if(group.isLeader(this.host) && group.getSize()>1){
-            //this.location = group.getLocation();
-            //System.out.println("Leader: "+this.location+" size: "+group.getSize());
+        }
+        /*if(group.isLeader(this.host)) {
+            //state = state.getState();
+        }else {
+            //state = group.getState();
         }*/
+
         double possibleMovement;
         double distance;
         double dx, dy;
@@ -244,16 +239,15 @@ public class DailyBehaviour {
         if (!this.isMovementActive() || SimClock.getTime() < this.nextPathAvailable()) {
             return;
         }
+
         if (this.destination == null || state.destinationChanged()) {
             if (!clculateNextWaypoint()) {
                 return;
             }
         }
 
-
         possibleMovement = timeIncrement * state.getSpeed();
         distance = this.location.distance(this.destination);
-
         while (possibleMovement >= distance) {
             // node can move past its next destination
             this.location.setLocation(this.destination); // snap to destination
@@ -261,12 +255,10 @@ public class DailyBehaviour {
             possibleMovement -= distance;
             distanceExceedsNextDestinationn = true;
             if (!clculateNextWaypoint()) { // get a new waypoint
-
                 return; // no more waypoints left
             }
             distance = this.location.distance(this.destination);
         }
-
         // move towards the point for possibleMovement amount
         dx = (possibleMovement/distance) * (this.destination.getX() -
                 this.location.getX());
@@ -295,6 +287,8 @@ public class DailyBehaviour {
             state.reachedDestination();
             if(group.isLeader(this.host)) {
                 state = state.getState(); //TODO: Newly added
+                if(state instanceof IdleState)
+                    return false;
             }else {
                 state = group.getState();
                 return false;
@@ -312,34 +306,9 @@ public class DailyBehaviour {
                 return false;
         }
 
-        //Check path is within building
-        /*if(movementModel.pathIntersects(this.location,vec.coord) || tempDestination != null){
-            if(!intersectionAvoidingWay1)
-            //move to the center of the main hall
-                vec = calculateNonIntersectingWay1(vec);
-            else if(!intersectionAvoidingWay2)
-                vec = calculateNonIntersectingWay2(tempDestination);
-            else {
-                intersectionAvoidingWay2 = false;
-                vec = tempDestination;
-                tempDestination = null;
-            }
-
-        }*/
-        //System.out.println("intersect: "+movementModel.pathIntersects(new Coord(60,100),new Coord(60,200)));
-        //System.out.println("intersect: "+movementModel.pathIntersects(new Coord(60,100),new Coord(450.0, 90.0)));
-
         this.destination = path.getNextWaypoint();
         this.speed = path.getSpeed();
-        //System.out.println("- nextWaypoint: "+this.destination);
-        //if(this.destination == this.location)
-          //  return false;
 
-//        if (this.movListeners != null) {
-//            for (MovementListener l : this.movListeners) {
-//                l.newDestination(this, this.destination, this.speed);
-//            }
-//        }
         return true;
     }
 
@@ -383,15 +352,21 @@ public class DailyBehaviour {
         return null;
     }
 
-//    private Coord calculateNonIntersectingWay3(MovementVector vec){
-//        intersectionAvoidingWay = true;
-//        //go to middle of main hall -> y = 310
-//        Coord middleCoord = new Coord(vec.coord.getX(),vec.coord.getX());
-//        return middleCoord;
-//    }
-
     public void setInitialLocation() {
-        setEntryLocation();
+        this.location = new Coord(200,200);     //Initial Location
+        
+        //Arrival Type
+        Random rng = new Random();
+        double r = rng.nextDouble();
+        if(r < 0.2) {
+            this.arrivalType = this.ARRIVAL_EAST; 
+        }else if(r > 0.2 && r < 0.4) {
+            this.arrivalType = this.ARRIVAL_WEST; 
+        }else if(r > 0.4 && r < 0.5) {
+            this.arrivalType = this.ARRIVAL_ELSE_NORTH;   
+        }else {
+            this.arrivalType = this.ARRIVAL_UBAHN_NORTH;
+        }
         movementModel.setLastWayPoint(this.location);
     }
 
@@ -401,6 +376,7 @@ public class DailyBehaviour {
 
     public boolean isMovementActive() {
         //System.out.println("name: "+host.getName()+" isMovementActive: "+movementModel.isActive());
+        System.out.println(host.getName()+" movementActive: "+(state.isActive() && movementModel.isActive()));
         return state.isActive() && movementModel.isActive();
         //return movementModel.isActive();
     }
@@ -413,11 +389,11 @@ public class DailyBehaviour {
         this.location = location;
     }
 
-    public int getArrivalTime() {
+    public double getArrivalTime() {
         return arrivalTime;
     }
 
-    public int getDepartureTime() {
+    public double getDepartureTime() {
         return departureTime;
     }
 }

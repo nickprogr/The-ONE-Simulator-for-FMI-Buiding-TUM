@@ -101,8 +101,13 @@ public class MyProhibitedPolygonRwp
 //        return p;
 //    }
 
-    public static Coord ENTRANCE_COORDS = new Coord(107, 40);
-
+    public static Coord ENTRANCE_WEST = new Coord(16, 41);
+    public static Coord ENTRANCE_NORTH = new Coord(107, 36);
+    public static Coord ENTRANCE_EAST = new Coord(120, 52);
+    public static Coord UBAHN_COORDS = new Coord(150, 0);
+    public static Coord BIKE_NORTH_COORDS = new Coord(100, 5);
+    public static Coord BIKE_WEST_COORDS = new Coord(0, 41);
+    public static Coord BIKE_EAST_COORDS = new Coord(140, 51);
     @Override
     public Path getPath(Coord source, Coord destination, double speed) {
         Path p = new Path();
@@ -117,7 +122,7 @@ public class MyProhibitedPolygonRwp
                 //p.addWaypoint(destination, speed);      //Then: Direct movement
             }
             if(1 == areaDestination && areaDestination <= 13) {   //Move to destination via mainhall
-                p.addWaypoint(this.ENTRANCE_COORDS);       //Go into building via Entrance
+                p.addWaypoint(this.ENTRANCE_NORTH);       //Go into building via Entrance
                 //TODO: Select closest entrance
                 if(1 < areaDestination)
                     p.addWaypoint(getAreaEntrance(areaDestination));    //Go to destination via area entrance
@@ -125,7 +130,14 @@ public class MyProhibitedPolygonRwp
         }
         if( areaDestination == -1) {
             //TODO move into/out of the Building via Entrance x
-            Path p1 = this.getPath(source,this.ENTRANCE_COORDS,speed);
+            Path p1 = new Path();
+            if(destination.equals(this.BIKE_NORTH_COORDS) || destination.equals(this.UBAHN_COORDS)){
+                p1 = this.getPath(source, this.ENTRANCE_NORTH, speed);
+            }else if(destination.equals(this.BIKE_EAST_COORDS)){
+                p1 = this.getPath(source, this.ENTRANCE_EAST, speed);
+            }else {
+                p1 = this.getPath(source, this.ENTRANCE_WEST, speed);
+            }
             p = p1;
             p.addWaypoint(destination, speed);
             return p;

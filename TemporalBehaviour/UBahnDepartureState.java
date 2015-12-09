@@ -5,13 +5,12 @@ import TemporalBehaviour.IdleState;
 import TemporalBehaviour.State;
 import core.Coord;
 import core.DTNHost;
+import movement.MyProhibitedPolygonRwp;
 
 /**
  * Created by Nikolas on 24.11.2015.
  */
 public class UBahnDepartureState extends State {
-
-    public static Coord UBAHN_COORDS = new Coord(140, 0);//150,0  //new Coord(190.0, -93);
 
     public UBahnDepartureState(){
         super();
@@ -21,7 +20,7 @@ public class UBahnDepartureState extends State {
     @Override
     public Coord getDestination() {
         destinationChanged = false;
-        return UBAHN_COORDS;
+        return MyProhibitedPolygonRwp.UBAHN_COORDS;
     }
 
     @Override

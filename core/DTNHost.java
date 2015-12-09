@@ -71,8 +71,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.personType = personType;
 
 		this.dailyBehaviour = new DailyBehaviour(this, mmProto, movLs);
-		this.dailyBehaviour.chooseLectures();        //Select Lectures taken through out the day
-		//this.dailyBehaviour.printLectures();
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();

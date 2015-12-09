@@ -32,7 +32,7 @@ public class UBahnArrivalState extends State {
                 r = random.nextDouble();
                 dy = r * 4 - 2; //+-1m
             } while (false);     //Minimal distance = 0.5m
-            coordDestination = new Coord(MyProhibitedPolygonRwp.ENTRANCE_COORDS.getX() + dx, MyProhibitedPolygonRwp.ENTRANCE_COORDS.getY() + dy);
+            coordDestination = new Coord(MyProhibitedPolygonRwp.ENTRANCE_NORTH.getX() + dx, MyProhibitedPolygonRwp.ENTRANCE_NORTH.getY() + dy);
         }
         return coordDestination;
         //return ENTRANCE_COORDS;
