@@ -23,7 +23,7 @@ public class DailyBehaviour {
     private DTNHost host;
     private MovementModel movementModel;
 
-    public static double START_BLOCK1 = 200;//8*60*60;
+    public static double START_BLOCK1 = 2*60*60;// 8*60*60;//200;
     public static double HOUR = 2000;//3200;
     public static double START_BLOCK2 = 2*HOUR+START_BLOCK1;
     public static double START_BLOCK3 = 2*HOUR+START_BLOCK2;
@@ -64,7 +64,7 @@ public class DailyBehaviour {
     public void setState(State state) {
         if (this.state == null || this.state.getID() != state.getID()) {
             this.state = state;
-            System.out.println("state "+state);
+            //System.out.println("state "+state);
             this.destination = null;        //To stop current movement
             this.path = null;
         }
@@ -82,7 +82,7 @@ public class DailyBehaviour {
             if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
                 Random random = new Random();
 
-                if (this.group.getSize() <= 1) {//If not already in a group
+                if (this.group.getSize() <= 1 && host.getDailyBehaviour().group.getSize() < 6) {//If not already in a group and other group has not more than already 5 members
 
                     if (random.nextDouble() < 0.1) {
                         System.out.println("-- addGroup");
@@ -233,8 +233,11 @@ public class DailyBehaviour {
                 lastLecture = lecture.getEndTime();
             }
         }
-        arrivalTime = firstLecture;//200;//
-        departureTime = lastLecture;//200000;//
+        Random random = new Random();
+        double earlier = random.nextDouble()*120*60;
+        double later = random.nextDouble()*120*60;
+        arrivalTime = firstLecture-earlier;//200;//
+        departureTime = lastLecture+later;//200000;//
         printLectures();
     }
 
@@ -323,11 +326,12 @@ public class DailyBehaviour {
             Coord destination = state.getDestination();
             double speed = state.getSpeed();
             //state.reachedDestination();
-            if(destination != null){
+            if(destination != null) {
                 path = movementModel.getPath(this.location, destination, speed);
-                System.out.println("Path");
-                System.out.println(path);}
-            else
+                //System.out.println("Path");
+                //System.out.println(path);
+
+            }else
                 return false;
         }
 

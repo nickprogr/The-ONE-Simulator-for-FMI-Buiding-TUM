@@ -22,7 +22,7 @@ public class LectureState extends State {
         state = this;
         this.lecture = lecture;
         destinationReached = false;
-        System.out.println("LectureState");
+        //System.out.println("LectureState");
     }
 
     @Override

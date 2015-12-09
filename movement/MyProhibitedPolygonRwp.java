@@ -152,7 +152,6 @@ public class MyProhibitedPolygonRwp
         }
         if (2 <= areaSource && areaSource <= 13) {      //Move from some Finger, Lecture Hall or Library, not necessary if you are already in the main hall
             p.addWaypoint(getAreaEntrance(areaSource),speed);
-            System.out.println("Move to entrance of finger "+getAreaEntrance(areaSource));
         }
         if (1 <= areaDestination && areaDestination <= 13){ //Move to Another place inside the building
             p.addWaypoint(getAreaEntrance(areaDestination),speed);

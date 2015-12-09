@@ -53,6 +53,9 @@ public class Group {
     }
 
     public int getSize() {
+        if(members.size()>2){
+            System.out.println("Members.size(): "+members.size());
+        }
         return members.size();
     }
 
