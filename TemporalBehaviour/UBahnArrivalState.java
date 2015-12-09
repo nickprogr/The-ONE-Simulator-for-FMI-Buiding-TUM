@@ -3,6 +3,7 @@ package TemporalBehaviour;
 import core.Coord;
 import core.DTNHost;
 import core.SimClock;
+import movement.MyProhibitedPolygonRwp;
 
 import java.util.ArrayList;
 
@@ -11,27 +12,42 @@ import java.util.ArrayList;
  */
 public class UBahnArrivalState extends State {
 
-    public static Coord ENTRANCE_COORDS = new Coord(107, 40);
+    private Coord coordDestination;
 
-    public UBahnArrivalState(DailyBehaviour dailyBehaviour, State state){
-        super(dailyBehaviour, state);
+    public UBahnArrivalState(){
+        super();
+        state = this;
+        destinationChanged = true;
     }
+
 
     @Override
     public Coord getDestination() {
         destinationChanged = false;
-        return ENTRANCE_COORDS;
+        if(coordDestination == null) {
+            double dx,dy;
+            do {
+                double r = random.nextDouble();
+                dx = r * 4 - 2; //+-1m
+                r = random.nextDouble();
+                dy = r * 4 - 2; //+-1m
+            } while (false);     //Minimal distance = 0.5m
+            coordDestination = new Coord(MyProhibitedPolygonRwp.ENTRANCE_COORDS.getX() + dx, MyProhibitedPolygonRwp.ENTRANCE_COORDS.getY() + dy);
+        }
+        return coordDestination;
+        //return ENTRANCE_COORDS;
     }
 
     @Override
     public void reachedDestination() {
         //dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, new InitState(dailyBehaviour, null)));
-        dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, this));
+        state = new FreetimeState();
 
         //dailyBehaviour.changeState(new StudyState(dailyBehaviour,this));
         //dailyBehaviour.changeState(new TestRoomFinger11(dailyBehaviour, this));
 
     }
+
 
     @Override
     public void update() {

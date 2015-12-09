@@ -101,6 +101,8 @@ public class MyProhibitedPolygonRwp
 //        return p;
 //    }
 
+    public static Coord ENTRANCE_COORDS = new Coord(107, 40);
+
     @Override
     public Path getPath(Coord source, Coord destination, double speed) {
         Path p = new Path();
@@ -115,14 +117,16 @@ public class MyProhibitedPolygonRwp
                 //p.addWaypoint(destination, speed);      //Then: Direct movement
             }
             if(1 == areaDestination && areaDestination <= 13) {   //Move to destination via mainhall
-                p.addWaypoint(UBahnArrivalState.ENTRANCE_COORDS);       //Go into building via Entrance
+                p.addWaypoint(this.ENTRANCE_COORDS);       //Go into building via Entrance
                 //TODO: Select closest entrance
                 if(1 < areaDestination)
                     p.addWaypoint(getAreaEntrance(areaDestination));    //Go to destination via area entrance
             }
         }
-            if( areaDestination == -1) {
+        if( areaDestination == -1) {
             //TODO move into/out of the Building via Entrance x
+            Path p1 = this.getPath(source,this.ENTRANCE_COORDS,speed);
+            p = p1;
             p.addWaypoint(destination, speed);
             return p;
         }

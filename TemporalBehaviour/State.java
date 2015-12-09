@@ -14,37 +14,29 @@ import java.util.Random;
 public abstract class State {
 
     protected Coord destination;
-    protected DailyBehaviour dailyBehaviour;
     protected double speed;
     protected boolean destinationChanged = true;
     protected Random random = new Random();
+    protected State state;
+    protected boolean isActive = true;
 
-    protected java.util.Map<DTNHost,Double> connectedHosts = new HashMap<>();
-
-    public State(DailyBehaviour dailyBehaviour, State state){
-        this.dailyBehaviour = dailyBehaviour;
-        if(state != null)
-            this.connectedHosts = state.getConnectedHosts();
-    }
-
-    public Map<DTNHost, Double> getConnectedHosts(){
-        return connectedHosts;
+    public State(){
     }
 
     public abstract Coord getDestination();
     public abstract void reachedDestination();
-
+    public State getState(){
+        return state;
+    }
+    public boolean isActive(){
+        return isActive;
+    }
 
     public abstract void update();
 
 
     public abstract void addConnection(DTNHost socialKnownHost);
     public abstract void removeConnection(DTNHost host);
-
-    public double suggestTimeToMeet(DTNHost other) {
-        Random rand = new Random();
-        return rand.nextDouble()*1000;
-    }
 
     public double getSpeed() {
         speed = 1;

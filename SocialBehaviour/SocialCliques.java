@@ -17,8 +17,8 @@ public class SocialCliques {
 
     }
 
-    private int averageCliqueAmount = 3;    //(0-4) in average
-    private int averageCliqueSize = 3;      //When use always times two to have half of it as expected value
+    private int averageCliqueAmount = 3;//3;    //(0-4) in average
+    private int averageCliqueSize = 3;//3;      //When use always times two to have half of it as expected value
 
     public void initCliques(List<DTNHost> hosts){
         int countHost = hosts.size();
@@ -28,13 +28,15 @@ public class SocialCliques {
 
         for(DTNHost host : hosts){
             //Define amount of groups
-            int amount_groups = rand.nextInt(averageCliqueAmount*2);
+            //int amount_groups = rand.nextInt(averageCliqueAmount*2);//TODO: Add
+            int amount_groups = 1;
             for( ;amount_groups > 0; amount_groups--){
                 int group_no = 0;
                 do {
                     group_no = rand.nextInt(hosts.size() * averageCliqueAmount * 2 / (averageCliqueSize * 2));
                 }while(host.isInGroup(group_no));
-                host.addGroup(group_no);
+                //host.addGroup(group_no);  //TODO: Add
+                host.addGroup(1);
             }
         }
 

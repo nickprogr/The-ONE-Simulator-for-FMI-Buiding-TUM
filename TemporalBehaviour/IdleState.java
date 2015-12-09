@@ -12,9 +12,10 @@ import java.util.Random;
  */
 public class IdleState extends State {
 
-    public IdleState(DailyBehaviour dailyBehaviour, State state){
-        super(dailyBehaviour, state);
-        dailyBehaviour.getMovement().setActive(false);
+    public IdleState(){
+        super();
+        state = this;
+        isActive = false;
     }
 
     @Override
@@ -24,7 +25,7 @@ public class IdleState extends State {
 
     @Override
     public void reachedDestination() {
-        dailyBehaviour.changeState(new UBahnArrivalState(dailyBehaviour, this));
+        state = new UBahnArrivalState();
     }
 
     @Override

@@ -2,20 +2,16 @@ package TemporalBehaviour;
 
 import core.Coord;
 import core.DTNHost;
-import core.SimClock;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
- * Created by Matthias on 18.11.2015.
+ * Created by Matthias on 09.12.2015.
  */
-public class InitState extends State {
+public class FinalState extends State {
 
-    public InitState(){
-        super();
+    public FinalState(){
+        state = this;
+        isActive = false;
     }
-
     @Override
     public Coord getDestination() {
         return null;
@@ -23,6 +19,7 @@ public class InitState extends State {
 
     @Override
     public void reachedDestination() {
+
     }
 
     @Override
@@ -31,10 +28,12 @@ public class InitState extends State {
     }
 
     @Override
-    public void addConnection(DTNHost otherHost) {
+    public void addConnection(DTNHost socialKnownHost) {
+
     }
 
     @Override
-    public void removeConnection(DTNHost otherHost) {
+    public void removeConnection(DTNHost host) {
+
     }
 }
