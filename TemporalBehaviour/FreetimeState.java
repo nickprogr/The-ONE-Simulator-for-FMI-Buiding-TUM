@@ -51,10 +51,13 @@ public class FreetimeState extends State {
     @Override
     public void reachedDestination() {
         //c = dailyBehaviour.getMovement().randomCoord();
-        state = new FreetimeState();
 
-        if(random.nextDouble() < 0.02){
+
+        if(random.nextDouble() < 0.01){
             //dailyBehaviour.changeState(new StudyState(dailyBehaviour, this));
+            state = new ToiletState();
+        }else{
+            state = new FreetimeState();
         }
         //ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
         //if( lectures.size() > 0){
@@ -93,5 +96,10 @@ public class FreetimeState extends State {
             this.dailyBehaviour.getMovement().setActive(true);
         }
         //}*/
+    }
+
+    @Override
+    public boolean enableConnections() {
+        return true;
     }
 }

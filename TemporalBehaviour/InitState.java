@@ -37,4 +37,9 @@ public class InitState extends State {
     @Override
     public void removeConnection(DTNHost otherHost) {
     }
+
+    @Override
+    public boolean enableConnections() {
+        return false;
+    }
 }

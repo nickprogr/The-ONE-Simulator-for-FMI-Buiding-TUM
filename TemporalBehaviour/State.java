@@ -57,4 +57,5 @@ public abstract class State {
         //Only when changed since else a recalculation will be done regarding the movement path
         return destinationChanged;
     }
+    public abstract boolean enableConnections();
 }

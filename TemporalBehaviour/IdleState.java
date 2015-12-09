@@ -41,4 +41,9 @@ public class IdleState extends State {
     @Override
     public void removeConnection(DTNHost otherHost) { /* DO NOTHING */}
 
+    @Override
+    public boolean enableConnections() {
+        return false;
+    }
+
 }

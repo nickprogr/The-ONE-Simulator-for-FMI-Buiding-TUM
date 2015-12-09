@@ -66,37 +66,32 @@ public class DailyBehaviour {
             this.destination = null;        //To stop current movement
             this.path = null;
         }
+        if(state instanceof  ToiletState && ((ToiletState) state).getToilet() == null ){
+            ((ToiletState) state).selectToilet(this.location);
+        }
     }
 
     public void addConnection(DTNHost host){
         //Only forward connection if they really know each other
         //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
-        if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
-            if(!(state instanceof LectureState) && !(host.getDailyBehaviour().getState() instanceof LectureState)) {
-            //       if(state instanceof FreetimeState) {
+        if(state.enableConnections() && host.getDailyBehaviour().getState().enableConnections()){
+        //       if(state instanceof FreetimeState) {
 
-    //            if (SocialCliques.socialCliques.haveSharedGroup(host, this.host)) {   //TODO: Add
-                Random random = new Random();
+//            if (SocialCliques.socialCliques.haveSharedGroup(host, this.host)) {   //TODO: Add
+            Random random = new Random();
 
-                if (this.group.getSize() <= 1) {//If not already in a group
+            if (this.group.getSize() <= 1) {//If not already in a group
 
-                    if (random.nextDouble() < 0.1) {
-                        System.out.println("-- addGroup");
-                        host.getDailyBehaviour().group.addMember(this.host);
-                        this.group = host.getDailyBehaviour().group;
-                        group.setInactive(50);
-                    }
+                if (random.nextDouble() < 0.1) {
+                    System.out.println("-- addGroup");
+                    host.getDailyBehaviour().group.addMember(this.host);
+                    this.group = host.getDailyBehaviour().group;
+                    group.setInactive(50);
                 }
             }
         }
-
- //               }
-                //state.addConnection(host);
- //           }
-
-
-
     }
+
     public void removeConnection(DTNHost host){
         state.removeConnection(host);
     }

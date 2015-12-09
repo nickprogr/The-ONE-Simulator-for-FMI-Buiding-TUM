@@ -58,9 +58,9 @@ public class DepartureState extends State {
                 double dy = 0;
                 do {
                     double r = random.nextDouble();
-                    //dx = r * 4 - 2; //+-1m
+                    dx = r * 2 - 1; //+-1m
                     r = random.nextDouble();
-                   // dy = r * 4 - 2; //+-1m
+                    dy = r * 2 - 1; //+-1m
                 } while (false);     //Minimal distance = 0.5m
                 /*if(!entranceReached) {
                     coordDestination = getEntrancePos();
@@ -96,5 +96,10 @@ public class DepartureState extends State {
         @Override
         public void removeConnection(DTNHost otherHost) { /* DO NOTHING */}
 
+    @Override
+    public boolean enableConnections() {
+        return true;
     }
+
+}
 

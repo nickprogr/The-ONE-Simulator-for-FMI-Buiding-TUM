@@ -1,6 +1,5 @@
 package movement;
 
-import TemporalBehaviour.UBahnArrivalState;
 import core.Coord;
 import core.Settings;
 

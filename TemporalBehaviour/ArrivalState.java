@@ -55,9 +55,9 @@ public class ArrivalState extends State {
                 double dy = 0;
                 do {
                     double r = random.nextDouble();
-                    dx = r * 4 - 2; //+-1m
+                    dx = r * 2 - 1; //+-1m
                     r = random.nextDouble();
-                    dy = r * 4 - 2; //+-1m
+                    dy = r * 2 - 1; //+-1m
                 } while (false);     //Minimal distance = 0.5m
                 coordDestination = getEntrancePos();
                 coordDestination = new Coord(coordDestination.getX() + dx, coordDestination.getY() + dy);
@@ -68,11 +68,7 @@ public class ArrivalState extends State {
 
         @Override
         public void reachedDestination() {
-            //dailyBehaviour.changeState(new FreetimeState(dailyBehaviour, new InitState(dailyBehaviour, null)));
             state = new FreetimeState();
-
-            //dailyBehaviour.changeState(new StudyState(dailyBehaviour,this));
-            //dailyBehaviour.changeState(new TestRoomFinger11(dailyBehaviour, this));
 
         }
 
@@ -89,4 +85,9 @@ public class ArrivalState extends State {
         @Override
         public void removeConnection(DTNHost otherHost) { /* DO NOTHING */}
 
+    @Override
+    public boolean enableConnections() {
+        return true;
     }
+
+}

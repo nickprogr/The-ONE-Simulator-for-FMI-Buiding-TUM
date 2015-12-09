@@ -36,4 +36,9 @@ public class FinalState extends State {
     public void removeConnection(DTNHost host) {
 
     }
+
+    @Override
+    public boolean enableConnections() {
+        return false;
+    }
 }
