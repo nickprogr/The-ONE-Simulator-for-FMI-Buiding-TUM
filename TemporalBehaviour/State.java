@@ -58,4 +58,40 @@ public abstract class State {
         return destinationChanged;
     }
     public abstract boolean enableConnections();
+
+    public State switchState(int freetimeState, int idleState, int toiletState, int waitState, int studyState, int lunchState){
+        if(freetimeState+idleState+toiletState+waitState+studyState+lunchState != 100){
+            System.out.println("\t\tSum of propabilities does not match 1!! It is: "+(freetimeState+idleState+toiletState+waitState+studyState+lunchState)+" "+state);
+        }
+        int r = random.nextInt(101);
+        if(r < freetimeState){
+            return new FreetimeState();
+        }else{
+            r -= freetimeState;
+            if(r < idleState){
+                return new IdleState();
+            }else{
+                r -= idleState;
+                if(r < toiletState){
+                    return new ToiletState();
+                }else{
+                    r -= toiletState;
+                    if( r < waitState){
+                        return new WaitState();
+                    }else{
+                        r -= waitState;
+                        if(r < studyState){
+                            return new StudyState();
+                        }else{
+                            r -= studyState;
+                            if( r<lunchState){
+                                return new LunchState();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return state;
+    }
 }

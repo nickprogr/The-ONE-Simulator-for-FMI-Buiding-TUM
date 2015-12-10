@@ -16,12 +16,14 @@ import java.util.Random;
 public class LectureState extends State {
 
     private Lecture lecture;
+    private Coord lectureCoord;
 
     public LectureState(Lecture lecture){
         super();
         state = this;
         this.lecture = lecture;
         destinationReached = false;
+        lectureCoord = new Coord(lecture.getCoord().getX()+random.nextDouble()*1.5-0.75,lecture.getCoord().getY()+random.nextDouble()*1.5-0.75);
         //System.out.println("LectureState");
     }
 
@@ -29,7 +31,7 @@ public class LectureState extends State {
     public Coord getDestination() {
         //if(isActive) {
             destinationChanged = false;
-            return lecture.getCoord();
+            return lectureCoord;
         //}
         //return null;
     }
@@ -64,17 +66,7 @@ public class LectureState extends State {
         } else {
             isActive = true;
             if(destinationReached) {
-                Random random = new Random();
-                double rand = random.nextDouble();
-                State newState;
-                if(rand < 0.10)
-                    newState = new ToiletState();
-                else if(rand < .5 && rand < .1) {
-                    newState = new WaitState();
-                }else{
-                    newState = new FreetimeState();
-                }
-                this.state = newState;
+                state = switchState(20,0,15,45,10,10);
             }
         }
     }

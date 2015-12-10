@@ -50,7 +50,6 @@ public class ToiletState extends State {
                 nearestToilet = toilet;
             }
         }
-        System.out.println("nearestToilet "+nearestToilet);
         toiletCoord = nearestToilet;
     }
 
@@ -95,14 +94,7 @@ public class ToiletState extends State {
         } else {
             isActive = true;
             if(destinationReached) {
-                Random random = new Random();
-                double rand = random.nextDouble();
-                State newState;
-                //if(rand < 0.40)
-                //    newState = new CafeteriaState(dailyBehaviour, this);
-                //else
-                newState = new FreetimeState();
-                this.state = newState;
+                state = switchState(20,0,0,10,60,10);
             }
         }
     }

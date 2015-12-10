@@ -1,5 +1,6 @@
 package movement;
 
+import TemporalBehaviour.DepartureState;
 import TemporalBehaviour.LunchState;
 import TemporalBehaviour.WaitState;
 import core.Coord;
@@ -144,7 +145,7 @@ public class MyProhibitedPolygonRwp
             System.out.println("host "+host);
             System.out.println("daily "+host.getDailyBehaviour());
             System.out.println("state "+host.getDailyBehaviour().getState());
-            if(destination.equals(this.BIKE_NORTH_COORDS) || destination.equals(this.UBAHN_COORDS) || (host.getDailyBehaviour().getState() instanceof LunchState)){
+            if(destination.equals(this.BIKE_NORTH_COORDS) || destination.equals(this.UBAHN_COORDS) || !(host.getDailyBehaviour().getState() instanceof DepartureState)){
                 p1 = this.getPath(source, this.ENTRANCE_NORTH, speed);
             }else if(destination.equals(this.BIKE_EAST_COORDS)){
                 p1 = this.getPath(source, this.ENTRANCE_EAST, speed);

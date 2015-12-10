@@ -25,23 +25,24 @@ public class StudyState extends State {
     private Coord selectStudyLocation() {
         double r = random.nextDouble();
         if(r < .25){
-            return new Coord(16,50);        //Library
+
+            return new Coord(15+(random.nextDouble()*24-12),55+(random.nextDouble()*18-9));        //Library
         }else if(r < .5){
-            return new Coord(81,29);        //Rechnerhalle
+            return new Coord(81+(random.nextDouble()*14-7),29+(random.nextDouble()*2-1));        //Rechnerhalle
         }else if(r < .5+1*0.0715){
-            return new Coord(75,52);        //LearnSpot7
+            return new Coord(75+(random.nextDouble()*4-2),52+(random.nextDouble()*3-1.5));        //LearnSpot7
         }else if(r < .5+2*0.0715){
-            return new Coord(60,50);        //LearnSpot6
+            return new Coord(60+(random.nextDouble()*4-2),50+(random.nextDouble()*3-1.5));         //LearnSpot6
         }else if(r < .5+3*0.0715){
-            return new Coord(88,37);        //LearnSpot5
+            return new Coord(88+(random.nextDouble()*4-2),37+(random.nextDouble()*3-1.5));        //LearnSpot5
         }else if(r < .5+4*0.0715){
-            return new Coord(76,36);        //LearnSpot4
+            return new Coord(76+(random.nextDouble()*4-2),36+(random.nextDouble()*3-1.5));        //LearnSpot4
         }else if(r < .5+5*0.0715){
-            return new Coord(53,35);        //LearnSpot3
+            return new Coord(60+(random.nextDouble()*4-2),50+(random.nextDouble()*3-1.5));        //LearnSpot3
         }else if(r < .5+6*0.0715){
-            return new Coord(44,35);        //LearnSpot2
+            return new Coord(44+(random.nextDouble()*4-2),35+(random.nextDouble()*3-1.5));        //LearnSpot2
         }else{
-            return new Coord(33,33);        //LearnSpot1
+            return new Coord(33+(random.nextDouble()*4-2),33+(random.nextDouble()*3-1.5));        //LearnSpot1
         }
     }
 
@@ -60,7 +61,14 @@ public class StudyState extends State {
     public void reachedDestination() {
         isActive = false;
         destinationReached = true;
-        double studyTime = random.nextDouble()*4*60*60;
+        double r = random.nextDouble();
+        double factor = 0;
+        if(r < 0.8){
+                factor = 20*60;      //short time period
+        }else{
+            factor = 4*60*60;
+        }
+        double studyTime = random.nextDouble()*factor;
         inactiveTime = studyTime+SimClock.getTime();
 
         //Goal reached
@@ -85,17 +93,7 @@ public class StudyState extends State {
         } else {
             isActive = true;
             if(destinationReached) {
-                Random random = new Random();
-                double rand = random.nextDouble();
-                State newState;
-                if(rand < 0.10)
-                    newState = new ToiletState();
-                else if(rand < .5 && rand < .1) {
-                    newState = new WaitState();
-                }else{
-                    newState = new FreetimeState();
-                }
-                this.state = newState;
+                state = switchState(30,0,15,15,30,10);
             }
         }
     }

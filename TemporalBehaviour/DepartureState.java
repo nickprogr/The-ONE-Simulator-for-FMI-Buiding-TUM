@@ -78,7 +78,7 @@ public class DepartureState extends State {
             reachedDestination = true;
 
             isActive = false;
-            state = new IdleState();
+            state = switchState(0,100,0,0,0,0);
         }
 
 

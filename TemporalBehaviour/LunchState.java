@@ -70,17 +70,7 @@ public class LunchState extends State {
         } else {
             isActive = true;
             if(destinationReached) {
-                Random random = new Random();
-                double rand = random.nextDouble();
-                State newState;
-                if(rand < 0.10)
-                    newState = new ToiletState();
-                else if(rand < .5 && rand < .1) {
-                    newState = new WaitState();
-                }else{
-                    newState = new FreetimeState();
-                }
-                this.state = newState;
+                state = switchState(20,0,20,20,40,0);
             }
         }
     }

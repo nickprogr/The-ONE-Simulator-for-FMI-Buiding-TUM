@@ -52,19 +52,8 @@ public class FreetimeState extends State {
     public void reachedDestination() {
         //c = dailyBehaviour.getMovement().randomCoord();
 
-        double r = random.nextDouble();
-        if(r < 0.01) {
-            //dailyBehaviour.changeState(new StudyState(dailyBehaviour, this));
-            state = new ToiletState();
-        }else if(r < 0.02){
-            state = new LunchState();
-        }else{
-            state = new FreetimeState();
-        }
-        //ArrayList<Lecture> lectures= dailyBehaviour.getLecturesAtTime(SimClock.getTime());
-        //if( lectures.size() > 0){
-        //    dailyBehaviour.changeState(new LectureState(dailyBehaviour, this, lectures.get(0)));
-        //}
+
+        state = switchState(30,0,5,15,40,10);
     }
 
     @Override

@@ -52,8 +52,7 @@ public class RoomPlans {
         for(int i = 0; i<=4;i++) {                  //5 Blocks per day
 
             Random random = new Random();
-            //if(random.nextDouble() < 3/5) {         //3 blocks should be held per room
-            int startTime = random.nextInt(3);
+            int startTime = random.nextInt(3)+1;
             switch (startTime) {
                 case 1:
                     startTime = 0;

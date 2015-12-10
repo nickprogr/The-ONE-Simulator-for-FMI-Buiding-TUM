@@ -23,7 +23,7 @@ public class DailyBehaviour {
     private DTNHost host;
     private MovementModel movementModel;
 
-    public static double START_BLOCK1 = 2*60*60;// 8*60*60;//200;
+    public static double START_BLOCK1 = 200;// 2*60*60;// 8*60*60;//200;
     public static double HOUR = 2000;//3200;
     public static double START_BLOCK2 = 2*HOUR+START_BLOCK1;
     public static double START_BLOCK3 = 2*HOUR+START_BLOCK2;
@@ -183,9 +183,9 @@ public class DailyBehaviour {
         if (state.getID() != newState.getID() && group.getSize() > 1) { //&& group.getSize() > 1){
             //Consider to change group
             Random rand = new Random();
-            if(rand.nextDouble()<0.5) {
-                group.removeMember(this.host);          //TODO: This test removes always
-                setState(new FreetimeState());       //TODO: List probability and State
+            if(rand.nextDouble()<0.7) {             //Remove from group and change state and make a new group
+                group.removeMember(this.host);
+                setState(state.switchState(30,0,5,15,40,10));
                 group = new Group(this.host);
             }
         }else{
@@ -195,7 +195,8 @@ public class DailyBehaviour {
 
         if(!(state instanceof LectureState)&&!(state instanceof IdleState)&&!(state instanceof ArrivalState)&&!(state instanceof DepartureState)) {
             ArrayList<Lecture> lectures = this.getLecturesAtTime(SimClock.getTime());
-            if (lectures.size() > 0) {
+            Random random = new Random();
+            if (lectures.size() > 0 && !(state instanceof LunchState)  && random.nextDouble() < 0.3) {      //TODO: Remove instance of
                 group.removeMember(this.host);
                 this.setState(new LectureState(lectures.get(lectures.size()-1)));       //Always take lecture from behind since first priority are workGroups and afterwards Lectures
                 group = new Group(this.host);

@@ -91,14 +91,7 @@ public class WaitState extends State {
                 isActive = false;
             } else {
                 isActive = true;
-                Random random = new Random();
-                double rand = random.nextDouble();
-                State newState;
-                //if(rand < 0.40)
-                //    newState = new CafeteriaState(dailyBehaviour, this);
-                //else
-                newState = new FreetimeState();
-                this.state = newState;
+                state = switchState(20,0,20,10,40,10);
             }
         }
     }

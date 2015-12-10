@@ -68,9 +68,7 @@ public class ArrivalState extends State {
 
         @Override
         public void reachedDestination() {
-            state = new StudyState();
-            //state = new FreetimeState();
-
+            state = switchState(15,0,5,20,45,15);
         }
 
 

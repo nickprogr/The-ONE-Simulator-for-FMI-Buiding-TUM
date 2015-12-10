@@ -24,7 +24,7 @@ public class SocialCliques {
     }
 
     private int averageCliqueAmount = 3;//3;    //(0-4) in average
-    private int averageCliqueSize = 3;//3;      //When use always times two to have half of it as expected value
+    private int averageCliqueSize = 5;//3;      //When use always times two to have half of it as expected value
     private HashMap<Integer, ArrayList<DTNHost>> groups = new HashMap<>();
     public void initCliques(List<DTNHost> hosts){
         int countHost = hosts.size();
