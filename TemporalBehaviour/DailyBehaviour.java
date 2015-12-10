@@ -127,7 +127,7 @@ public class DailyBehaviour {
         this.chooseLectures();        //Select Lectures taken through out the day
         //addDate(new Lecture(50, 200, new Coord(28,15)));
         //addDate(new Lecture(500, 200, new Coord(118,42)));
-        //this.printLectures();
+        this.printLectures();
 
 
         setInitialLocation();
@@ -143,25 +143,41 @@ public class DailyBehaviour {
         Random random = new Random();
 
         //block1
+        Lecture lecture;
         ArrayList<Lecture> lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+MAX_LECTURE_DELAY);
-        if(lectureList.size() > 0 && random.nextDouble()<0.5)
-            selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
+        if(lectureList.size() > 0 && random.nextDouble()<0.5) {
+            lecture = lectureList.get(random.nextInt(lectureList.size()));
+            selectedLectures.add(lecture);
+            lecture.addStudent();
+        }
         //block2
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*60*60+MAX_LECTURE_DELAY);
-        if(lectureList.size() > 0 && random.nextDouble()<0.8)
-            selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
+        if(lectureList.size() > 0 && random.nextDouble()<0.8){
+            lecture = lectureList.get(random.nextInt(lectureList.size()));
+            selectedLectures.add(lecture);
+            lecture.addStudent();
+        }
         //block3
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*2*60*60+MAX_LECTURE_DELAY);
-        if(lectureList.size() > 0 && random.nextDouble()<0.8)
-            selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
+        if(lectureList.size() > 0 && random.nextDouble()<0.8){
+            lecture = lectureList.get(random.nextInt(lectureList.size()));
+            selectedLectures.add(lecture);
+            lecture.addStudent();
+        }
         //block4
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+3*2*60*60+MAX_LECTURE_DELAY);
-        if(lectureList.size() > 0 && random.nextDouble()<0.8)
-            selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
+        if(lectureList.size() > 0 && random.nextDouble()<0.8){
+            lecture = lectureList.get(random.nextInt(lectureList.size()));
+            selectedLectures.add(lecture);
+            lecture.addStudent();
+        }
         //block5
         lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+4*2*60*60+MAX_LECTURE_DELAY);
-        if(lectureList.size() > 0 && random.nextDouble()<0.5)
-            selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
+        if(lectureList.size() > 0 && random.nextDouble()<0.5){
+            lecture = lectureList.get(random.nextInt(lectureList.size()));
+            selectedLectures.add(lecture);
+            lecture.addStudent();
+        }
     }
 
 

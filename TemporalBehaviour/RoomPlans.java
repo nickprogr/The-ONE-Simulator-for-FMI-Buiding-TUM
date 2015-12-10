@@ -26,7 +26,7 @@ public class RoomPlans {
         if(roomPlans == null){
             roomPlans = new RoomPlans();
             roomPlans.initRooms();
-            roomPlans.printRoomPlans();
+            //roomPlans.printRoomPlans();
         }
         return roomPlans;
     }
@@ -36,17 +36,17 @@ public class RoomPlans {
     }
     public static void initRooms(){
         //HOERSAAL1
-        initRoom(HOERSAAL1);
+        initRoom(HOERSAAL1,-1);
         //ROOMFINGER11
-        initRoom(ROOMFINGER11);
+        initRoom(ROOMFINGER11,80);
         //ROOMFINGER8
-        initRoom(ROOMFINGER8);
+        initRoom(ROOMFINGER8,40);
         //HOERSAAL2
-        initRoom(HOERSAAL2);
+        initRoom(HOERSAAL2,-1);
         //HOERSAAL3
-        initRoom(HOERSAAL3);
+        initRoom(HOERSAAL3,-1);
         //SEMINARROOM
-        initRoom(SEMINARROOM);
+        initRoom(SEMINARROOM,100);
     }
     public void printRoomPlans(){
         for(Coord coord : roomPlansMap.keySet()){
@@ -55,7 +55,7 @@ public class RoomPlans {
         }
     }
 
-    private static void initRoom(Coord roomCoord) {
+    private static void initRoom(Coord roomCoord, int seats) {
         for(int i = 0; i<=4;i++) {                  //5 Blocks per day
 
             Random random = new Random();
@@ -81,7 +81,7 @@ public class RoomPlans {
                     break;
                //}
             }
-            roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1+DailyBehaviour.BLOCK_LENGTH*i+startTime, duration, roomCoord));
+            roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1+DailyBehaviour.BLOCK_LENGTH*i+startTime, duration, roomCoord, seats));
 
         }
     }
@@ -98,7 +98,7 @@ public class RoomPlans {
         ArrayList<Lecture>lecturesAtTime = new ArrayList<>();
         for(RoomPlan roomPlan : roomPlansMap.values()){
             for(Lecture lecture : roomPlan.getLectures()){
-                if(lecture.lectureTakesPlace(time))
+                if(lecture.lectureTakesPlace(time) && !lecture.isFull())
                     lecturesAtTime.add(lecture);
             }
         }

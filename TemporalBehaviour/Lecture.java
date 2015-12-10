@@ -14,9 +14,10 @@ public class Lecture {
     private Coord room;
     private int lectureID;
     public static int current_id_count = 0;
+    public int seats;
     //private Lecturer
 
-    public Lecture(double startTime, double length, Coord room){
+    public Lecture(double startTime, double length, Coord room, int seats){
         //TODO: Check intersection with other Lectures
         current_id_count = current_id_count + 1;
         setLectureID(current_id_count);
@@ -24,6 +25,7 @@ public class Lecture {
         setStartTime(startTime);
         setLength(length);
         setEndTime(startTime + length);
+        setSeats(seats);
 
     }
 
@@ -74,5 +76,16 @@ public class Lecture {
     public String print() {
         String retString = this.getLectureID()+" room: "+getCoord()+" start: "+getStartTime()+" end: "+getEndTime();
         return retString;
+    }
+
+    public void setSeats(int seats) {
+        this.seats = seats;
+    }
+    public void addStudent(){
+        this.seats -= 1;
+    }
+
+    public boolean isFull() {
+        return (seats == 0);        //also return -1 and less because these are rooms with infinite size
     }
 }
