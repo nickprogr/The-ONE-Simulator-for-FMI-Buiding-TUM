@@ -249,6 +249,9 @@ public class MyProhibitedPolygonRwp
         pFinger5.addPoint(96,0);
         pFinger5.addPoint(96,36);
         pFinger5.addPoint(88,36);
+        pFinger5.addPoint(88,31);
+        pFinger5.addPoint(81,31);
+        pFinger5.addPoint(81,25);
         pFinger5.addPoint(88,25);
 
 
@@ -264,6 +267,8 @@ public class MyProhibitedPolygonRwp
         pFinger7.addPoint(66,0);
         pFinger7.addPoint(74,0);
         pFinger7.addPoint(74,25);
+        pFinger7.addPoint(81,25);
+        pFinger7.addPoint(81,31);
         pFinger7.addPoint(74,31);
         pFinger7.addPoint(66,31);
 
