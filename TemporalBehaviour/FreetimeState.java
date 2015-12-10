@@ -52,10 +52,12 @@ public class FreetimeState extends State {
     public void reachedDestination() {
         //c = dailyBehaviour.getMovement().randomCoord();
 
-
-        if(random.nextDouble() < 0.01){
+        double r = random.nextDouble();
+        if(r < 0.01) {
             //dailyBehaviour.changeState(new StudyState(dailyBehaviour, this));
             state = new ToiletState();
+        }else if(r < 0.02){
+            state = new LunchState();
         }else{
             state = new FreetimeState();
         }

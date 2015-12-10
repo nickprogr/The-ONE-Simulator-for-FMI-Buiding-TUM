@@ -1,7 +1,9 @@
 package movement;
 
+import TemporalBehaviour.LunchState;
 import TemporalBehaviour.WaitState;
 import core.Coord;
+import core.DTNHost;
 import core.Settings;
 
 import java.awt.*;
@@ -139,7 +141,10 @@ public class MyProhibitedPolygonRwp
         if( areaDestination == -1) {
             //TODO move into/out of the Building via Entrance x
             Path p1 = new Path();
-            if(destination.equals(this.BIKE_NORTH_COORDS) || destination.equals(this.UBAHN_COORDS)){
+            System.out.println("host "+host);
+            System.out.println("daily "+host.getDailyBehaviour());
+            System.out.println("state "+host.getDailyBehaviour().getState());
+            if(destination.equals(this.BIKE_NORTH_COORDS) || destination.equals(this.UBAHN_COORDS) || (host.getDailyBehaviour().getState() instanceof LunchState)){
                 p1 = this.getPath(source, this.ENTRANCE_NORTH, speed);
             }else if(destination.equals(this.BIKE_EAST_COORDS)){
                 p1 = this.getPath(source, this.ENTRANCE_EAST, speed);

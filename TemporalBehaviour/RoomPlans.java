@@ -18,6 +18,9 @@ public class RoomPlans {
     public static final Coord HOERSAAL1 = new Coord(118,42);
     public static final Coord ROOMFINGER11 = new Coord(83,65);
     public static final Coord ROOMFINGER8 = new Coord(28,15);
+    public static final Coord HOERSAAL2 = new Coord(91,58);
+    public static final Coord HOERSAAL3 = new Coord(111,59);
+    public static final Coord SEMINARROOM = new Coord(15,32);
 
     public static RoomPlans getRoomPlans(){
         if(roomPlans == null){
@@ -37,6 +40,12 @@ public class RoomPlans {
         initRoom(ROOMFINGER11);
         //ROOMFINGER8
         initRoom(ROOMFINGER8);
+        //HOERSAAL2
+        initRoom(HOERSAAL2);
+        //HOERSAAL3
+        initRoom(HOERSAAL3);
+        //SEMINARROOM
+        initRoom(SEMINARROOM);
     }
 
     private static void initRoom(Coord roomCoord) {

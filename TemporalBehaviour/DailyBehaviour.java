@@ -103,6 +103,7 @@ public class DailyBehaviour {
         //Settings s = new Settings(SimScenario.SCENARIO_NS);
         //this.movementModel = new MyProhibitedPolygonRwp(s);
         this.movementModel = movement.replicate();
+        this.movementModel.setHost(host);
 
 
         //if(counter < 50) {
@@ -197,7 +198,6 @@ public class DailyBehaviour {
             if (lectures.size() > 0) {
                 group.removeMember(this.host);
                 this.setState(new LectureState(lectures.get(lectures.size()-1)));       //Always take lecture from behind since first priority are workGroups and afterwards Lectures
-                //this.destination = null;        //To stop current movement
                 group = new Group(this.host);
             }
         }
