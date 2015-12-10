@@ -24,6 +24,7 @@ public class DailyBehaviour {
     private MovementModel movementModel;
 
     public static double START_BLOCK1 = 200;// 2*60*60;// 8*60*60;//200;
+    public static double MAX_LECTURE_DELAY = 30*60;
     public static double HOUR = 2000;//3200;
     public static double START_BLOCK2 = 2*HOUR+START_BLOCK1;
     public static double START_BLOCK3 = 2*HOUR+START_BLOCK2;
@@ -40,6 +41,7 @@ public class DailyBehaviour {
     private Coord location = new Coord(0,0);
     private Coord destination;
     private double speed;
+    private boolean skipLecture = false;
 
     private double arrivalTime = 0;
     private double departureTime = 0;
@@ -67,6 +69,8 @@ public class DailyBehaviour {
             //System.out.println("state "+state);
             this.destination = null;        //To stop current movement
             this.path = null;
+            skipLecture = false;
+
         }
         if(state instanceof  ToiletState && ((ToiletState) state).getToilet() == null ){
             ((ToiletState) state).selectToilet(this.location);
@@ -139,23 +143,23 @@ public class DailyBehaviour {
         Random random = new Random();
 
         //block1
-        ArrayList<Lecture> lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1);
+        ArrayList<Lecture> lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+MAX_LECTURE_DELAY);
         if(lectureList.size() > 0 && random.nextDouble()<0.5)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block2
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*60*60);
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*60*60+MAX_LECTURE_DELAY);
         if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block3
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*2*60*60);
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+2*2*60*60+MAX_LECTURE_DELAY);
         if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block4
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+3*2*60*60);
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+3*2*60*60+MAX_LECTURE_DELAY);
         if(lectureList.size() > 0 && random.nextDouble()<0.8)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
         //block5
-        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+4*2*60*60);
+        lectureList = roomPlans.getAllLecturesAtTime(START_BLOCK1+4*2*60*60+MAX_LECTURE_DELAY);
         if(lectureList.size() > 0 && random.nextDouble()<0.5)
             selectedLectures.add(lectureList.get(random.nextInt(lectureList.size())));
     }
@@ -195,11 +199,16 @@ public class DailyBehaviour {
 
         if(!(state instanceof LectureState)&&!(state instanceof IdleState)&&!(state instanceof ArrivalState)&&!(state instanceof DepartureState)) {
             ArrayList<Lecture> lectures = this.getLecturesAtTime(SimClock.getTime());
-            Random random = new Random();
-            if (lectures.size() > 0 && !(state instanceof LunchState)  && random.nextDouble() < 0.3) {      //TODO: Remove instance of
-                group.removeMember(this.host);
-                this.setState(new LectureState(lectures.get(lectures.size()-1)));       //Always take lecture from behind since first priority are workGroups and afterwards Lectures
-                group = new Group(this.host);
+
+            if (lectures.size() > 0 && !skipLecture) {
+                Random random = new Random();
+                if(random.nextDouble() < 0.4){
+                    skipLecture = true;
+                }else {
+                    group.removeMember(this.host);
+                    this.setState(new LectureState(lectures.get(lectures.size() - 1)));       //Always take lecture from behind since first priority are workGroups and afterwards Lectures
+                    group = new Group(this.host);
+                }
             }
         }
 

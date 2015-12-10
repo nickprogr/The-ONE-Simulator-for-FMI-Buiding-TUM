@@ -24,8 +24,7 @@ public class StudyState extends State {
 
     private Coord selectStudyLocation() {
         double r = random.nextDouble();
-        if(r < .25){
-
+        if(r < .35){
             return new Coord(15+(random.nextDouble()*24-12),55+(random.nextDouble()*18-9));        //Library
         }else if(r < .5){
             return new Coord(81+(random.nextDouble()*14-7),29+(random.nextDouble()*2-1));        //Rechnerhalle

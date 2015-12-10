@@ -26,6 +26,7 @@ public class RoomPlans {
         if(roomPlans == null){
             roomPlans = new RoomPlans();
             roomPlans.initRooms();
+            roomPlans.printRoomPlans();
         }
         return roomPlans;
     }
@@ -46,6 +47,12 @@ public class RoomPlans {
         initRoom(HOERSAAL3);
         //SEMINARROOM
         initRoom(SEMINARROOM);
+    }
+    public void printRoomPlans(){
+        for(Coord coord : roomPlansMap.keySet()){
+            RoomPlan roomPlan = roomPlansMap.get(coord);
+            roomPlan.printPlan();
+        }
     }
 
     private static void initRoom(Coord roomCoord) {

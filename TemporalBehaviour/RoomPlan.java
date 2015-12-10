@@ -23,4 +23,14 @@ public class RoomPlan {
     public ArrayList<Lecture> getLectures() {
         return lectures;
     }
+
+    public void printPlan() {
+        if(this.lectures.size() > 0) {
+            System.out.println("");
+            System.out.println("Room coord: " + this.lectures.get(0).getCoord());
+            for(Lecture lecture: lectures){
+                System.out.println("\t- "+lecture.print());
+            }
+        }
+    }
 }

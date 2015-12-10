@@ -42,7 +42,13 @@ public class LectureState extends State {
     public void reachedDestination() {
         isActive = false;
         destinationReached = true;
-        inactiveTime = lecture.getEndTime();
+        //not all Students will stay until the end
+        double earlierLeave = 0;
+        if(random.nextDouble()< 0.1){
+            earlierLeave = lecture.getLength()*random.nextDouble();
+        }
+
+        inactiveTime = lecture.getEndTime()-earlierLeave;
 
         //Goal reached
         //dailyBehaviour.getMovement().setInactive(lecture.getEndTime()-SimClock.getTime());
