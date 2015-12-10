@@ -60,6 +60,7 @@ public class ArrivalState extends State {
                     dy = r * 2 - 1; //+-1m
                 } while (false);     //Minimal distance = 0.5m
                 coordDestination = getEntrancePos();
+                System.out.println(coordDestination);
                 coordDestination = new Coord(coordDestination.getX() + dx, coordDestination.getY() + dy);
             }
             return coordDestination;
@@ -68,6 +69,7 @@ public class ArrivalState extends State {
 
         @Override
         public void reachedDestination() {
+            //TODO: Called at wrong moment, destination was not reached
             state = switchState(15,0,5,20,45,15);
         }
 

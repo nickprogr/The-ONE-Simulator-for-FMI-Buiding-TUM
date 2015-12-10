@@ -59,7 +59,7 @@ public class DailyBehaviour {
     public void setState(State state) {
         if (this.state == null || this.state.getID() != state.getID()) {
             this.state = state;
-            //System.out.println("state "+state);
+            System.out.println("state "+state);
             this.destination = null;        //To stop current movement
             this.path = null;
             skipLecture = false;

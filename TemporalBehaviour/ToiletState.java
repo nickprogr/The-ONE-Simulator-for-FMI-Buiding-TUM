@@ -29,8 +29,8 @@ public class ToiletState extends State {
             toilets.add(new Coord(49, 10));
             toilets.add(new Coord(28, 28));
             toilets.add(new Coord(27, 11));
-            toilets.add(new Coord(6, 26));
-            toilets.add(new Coord(5, 11));
+            //toilets.add(new Coord(6, 26));
+            //toilets.add(new Coord(5, 11));
             toilets.add(new Coord(120, 62));
             toilets.add(new Coord(120, 74));
             toilets.add(new Coord(99, 60));

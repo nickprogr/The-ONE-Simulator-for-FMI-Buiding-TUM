@@ -26,7 +26,7 @@ public class LunchState extends State {
         if(r < .50){
             return new Coord(70,53);        //Cafeteria
         }else{
-            return new Coord(122,-5);        //Mensa
+            return new Coord(122,2);        //Mensa
         }
     }
 
