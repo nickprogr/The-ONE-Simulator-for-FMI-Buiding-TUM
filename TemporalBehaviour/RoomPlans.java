@@ -20,7 +20,7 @@ public class RoomPlans {
     public static final Coord ROOMFINGER8 = new Coord(28,15);
     public static final Coord HOERSAAL2 = new Coord(91,58);
     public static final Coord HOERSAAL3 = new Coord(111,59);
-    public static final Coord SEMINARROOM = new Coord(15,32);
+    public static final Coord SEMINARROOM = new Coord(15,33);
 
     public static RoomPlans getRoomPlans(){
         if(roomPlans == null){
@@ -36,17 +36,17 @@ public class RoomPlans {
     }
     public static void initRooms(){
         //HOERSAAL1
-        initRoom(HOERSAAL1,-1);
+        initRoom(HOERSAAL1,-1, new Coord(5,5));
         //ROOMFINGER11
-        initRoom(ROOMFINGER11,80);
+        initRoom(ROOMFINGER11,80,new Coord(2,2));
         //ROOMFINGER8
-        initRoom(ROOMFINGER8,40);
+        initRoom(ROOMFINGER8,40,new Coord(2,2));
         //HOERSAAL2
-        initRoom(HOERSAAL2,-1);
+        initRoom(HOERSAAL2,-1,new Coord(2,2));
         //HOERSAAL3
-        initRoom(HOERSAAL3,-1);
+        initRoom(HOERSAAL3,-1,new Coord(2,2));
         //SEMINARROOM
-        initRoom(SEMINARROOM,100);
+        initRoom(SEMINARROOM,100,new Coord(5,2));
     }
     public void printRoomPlans(){
         for(Coord coord : roomPlansMap.keySet()){
@@ -55,7 +55,7 @@ public class RoomPlans {
         }
     }
 
-    private static void initRoom(Coord roomCoord, int seats) {
+    private static void initRoom(Coord roomCoord, int seats, Coord roomDimension) {
         for(int i = 0; i<=4;i++) {                  //5 Blocks per day
 
             Random random = new Random();
@@ -71,17 +71,12 @@ public class RoomPlans {
                     startTime = 30*60;
                     break;
             }
-            int duration = random.nextInt(2);
-            switch (duration) {
-                case 0:
-                    duration = 60*60;
-                    break;
-                case 1:
+            int duration;
+            //if(random.nextDouble()<0.2)
+            //      duration = 60*60;
                     duration = 90*60;
-                    break;
-               //}
-            }
-            roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1+DailyBehaviour.BLOCK_LENGTH*i+startTime, duration, roomCoord, seats));
+            //}
+            roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1+DailyBehaviour.BLOCK_LENGTH*i+startTime, duration, roomCoord, seats, roomDimension));
 
         }
     }

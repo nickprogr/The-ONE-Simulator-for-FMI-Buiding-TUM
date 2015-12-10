@@ -25,13 +25,6 @@ public class DailyBehaviour {
 
     public static double START_BLOCK1 = 200;// 2*60*60;// 8*60*60;//200;
     public static double MAX_LECTURE_DELAY = 30*60;
-    public static double HOUR = 2000;//3200;
-    public static double START_BLOCK2 = 2*HOUR+START_BLOCK1;
-    public static double START_BLOCK3 = 2*HOUR+START_BLOCK2;
-    public static double START_BLOCK4 = 2*HOUR+START_BLOCK3;
-    public static double START_BLOCK5 = 2*HOUR+START_BLOCK4;
-    public static double START_BLOCK6 = 2*HOUR+START_BLOCK5;
-    public static double LECTURE_LENGHT = 1.0*HOUR;//1.5*HOUR;
 
     public static final int ARRIVAL_UBAHN_NORTH = 0;
     public static final int ARRIVAL_ELSE_NORTH = 1;

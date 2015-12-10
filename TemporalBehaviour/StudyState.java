@@ -18,30 +18,30 @@ public class StudyState extends State {
         super();
         state = this;
         destinationReached = false;
-        studyLocation = selectStudyLocation();
+        selectStudyLocation();
         //System.out.println("LectureState");
     }
 
-    private Coord selectStudyLocation() {
+    private void selectStudyLocation() {
         double r = random.nextDouble();
         if(r < .35){
-            return new Coord(15+(random.nextDouble()*24-12),55+(random.nextDouble()*18-9));        //Library
+            studyLocation = new Coord(15+(random.nextDouble()*24-12),55+(random.nextDouble()*18-9));        //Library
         }else if(r < .5){
-            return new Coord(81+(random.nextDouble()*14-7),29+(random.nextDouble()*2-1));        //Rechnerhalle
+            studyLocation =  new Coord(81+(random.nextDouble()*14-7),29+(random.nextDouble()*2-1));        //Rechnerhalle
         }else if(r < .5+1*0.0715){
-            return new Coord(75+(random.nextDouble()*4-2),52+(random.nextDouble()*3-1.5));        //LearnSpot7
+            studyLocation =  new Coord(75+(random.nextDouble()*4-2),52+(random.nextDouble()*3-1.5));        //LearnSpot7
         }else if(r < .5+2*0.0715){
-            return new Coord(60+(random.nextDouble()*4-2),50+(random.nextDouble()*3-1.5));         //LearnSpot6
+            studyLocation =  new Coord(60+(random.nextDouble()*4-2),50+(random.nextDouble()*3-1.5));         //LearnSpot6
         }else if(r < .5+3*0.0715){
-            return new Coord(88+(random.nextDouble()*4-2),37+(random.nextDouble()*3-1.5));        //LearnSpot5
+            studyLocation =  new Coord(88+(random.nextDouble()*4-2),37+(random.nextDouble()*3-1.5));        //LearnSpot5
         }else if(r < .5+4*0.0715){
-            return new Coord(76+(random.nextDouble()*4-2),36+(random.nextDouble()*3-1.5));        //LearnSpot4
+            studyLocation =  new Coord(76+(random.nextDouble()*4-2),36+(random.nextDouble()*3-1.5));        //LearnSpot4
         }else if(r < .5+5*0.0715){
-            return new Coord(60+(random.nextDouble()*4-2),50+(random.nextDouble()*3-1.5));        //LearnSpot3
+            studyLocation =  new Coord(60+(random.nextDouble()*4-2),50+(random.nextDouble()*3-1.5));        //LearnSpot3
         }else if(r < .5+6*0.0715){
-            return new Coord(44+(random.nextDouble()*4-2),35+(random.nextDouble()*3-1.5));        //LearnSpot2
+            studyLocation =  new Coord(44+(random.nextDouble()*4-2),35+(random.nextDouble()*3-1.5));        //LearnSpot2
         }else{
-            return new Coord(33+(random.nextDouble()*4-2),33+(random.nextDouble()*3-1.5));        //LearnSpot1
+            studyLocation =  new Coord(33+(random.nextDouble()*4-2),33+(random.nextDouble()*3-1.5));        //LearnSpot1
         }
     }
 

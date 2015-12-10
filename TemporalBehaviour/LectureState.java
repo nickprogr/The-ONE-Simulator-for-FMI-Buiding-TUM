@@ -23,7 +23,10 @@ public class LectureState extends State {
         state = this;
         this.lecture = lecture;
         destinationReached = false;
-        lectureCoord = new Coord(lecture.getCoord().getX()+random.nextDouble()*1.5-0.75,lecture.getCoord().getY()+random.nextDouble()*1.5-0.75);
+        double variationX = random.nextDouble()*lecture.getRoomDimensions().getX()-lecture.getRoomDimensions().getX()/2;
+        double variationY = random.nextDouble()*lecture.getRoomDimensions().getY()-lecture.getRoomDimensions().getY()/2;
+
+        lectureCoord = new Coord(lecture.getCoord().getX()+variationX,lecture.getCoord().getY()+variationY);
         //System.out.println("LectureState");
     }
 

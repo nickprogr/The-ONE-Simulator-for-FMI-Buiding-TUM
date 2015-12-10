@@ -15,10 +15,10 @@ public class Lecture {
     private int lectureID;
     public static int current_id_count = 0;
     public int seats;
+    public Coord roomDimensions;
     //private Lecturer
 
-    public Lecture(double startTime, double length, Coord room, int seats){
-        //TODO: Check intersection with other Lectures
+    public Lecture(double startTime, double length, Coord room, int seats, Coord roomDimensions){
         current_id_count = current_id_count + 1;
         setLectureID(current_id_count);
         getCoord(room);
@@ -26,6 +26,12 @@ public class Lecture {
         setLength(length);
         setEndTime(startTime + length);
         setSeats(seats);
+        setRoomDimensions(roomDimensions);
+
+    }
+    public Coord getRoomDimensions(){
+        //When room (Coord) is the center
+        return roomDimensions;
 
     }
 
@@ -87,5 +93,9 @@ public class Lecture {
 
     public boolean isFull() {
         return (seats == 0);        //also return -1 and less because these are rooms with infinite size
+    }
+
+    public void setRoomDimensions(Coord roomDimensions) {
+        this.roomDimensions = roomDimensions;
     }
 }

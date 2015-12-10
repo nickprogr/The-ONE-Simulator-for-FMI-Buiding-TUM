@@ -8,7 +8,7 @@ import core.Coord;
 public class GroupWork extends Lecture {
     private int groupId;
     public GroupWork(double startTime, double length, Coord room, int groupId) {
-        super(startTime, length, room, -1);
+        super(startTime, length, room, -1, new Coord(0,0));
         this.groupId = groupId;
     }
 }
