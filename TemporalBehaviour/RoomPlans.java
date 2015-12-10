@@ -71,10 +71,10 @@ public class RoomPlans {
                     startTime = 30*60;
                     break;
             }
-            int duration;
+            double duration;
             //if(random.nextDouble()<0.2)
             //      duration = 60*60;
-                    duration = 90*60;
+                    duration = 90*60+random.nextDouble()*5*60-2.5*60;
             //}
             roomPlans.addLecture(new Lecture(DailyBehaviour.START_BLOCK1+DailyBehaviour.BLOCK_LENGTH*i+startTime, duration, roomCoord, seats, roomDimension));
 

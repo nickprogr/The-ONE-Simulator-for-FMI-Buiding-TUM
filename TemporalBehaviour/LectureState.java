@@ -47,7 +47,7 @@ public class LectureState extends State {
         destinationReached = true;
         //not all Students will stay until the end
         double earlierLeave = 0;
-        if(random.nextDouble()< 0.1){
+        if(random.nextDouble()< 0.5){
             earlierLeave = lecture.getLength()*random.nextDouble();
         }
 
