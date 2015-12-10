@@ -85,7 +85,7 @@ public class DailyBehaviour {
                 if (this.group.getSize() <= 1 && host.getDailyBehaviour().group.getSize() < 6) {//If not already in a group and other group has not more than already 5 members
 
                     if (random.nextDouble() < 0.1) {
-                        System.out.println("-- addGroup");
+                        //System.out.println("-- addGroup");
                         otherHost.getDailyBehaviour().group.addMember(this.host);
                         this.group = otherHost.getDailyBehaviour().group;
                         group.setInactive(50);
@@ -123,7 +123,7 @@ public class DailyBehaviour {
         this.chooseLectures();        //Select Lectures taken through out the day
         //addDate(new Lecture(50, 200, new Coord(28,15)));
         //addDate(new Lecture(500, 200, new Coord(118,42)));
-        this.printLectures();
+        //this.printLectures();
 
 
         setInitialLocation();
@@ -239,7 +239,7 @@ public class DailyBehaviour {
         double later = random.nextDouble()*120*60;
         arrivalTime = firstLecture-earlier;//200;//
         departureTime = lastLecture+later;//200000;//
-        printLectures();
+        //printLectures();
     }
 
 

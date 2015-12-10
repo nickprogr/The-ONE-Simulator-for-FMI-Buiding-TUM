@@ -74,7 +74,6 @@ public class DepartureState extends State {
 
         @Override
         public void reachedDestination() {
-            System.out.println("reachedDestination");
             reachedDestination = true;
 
             isActive = false;

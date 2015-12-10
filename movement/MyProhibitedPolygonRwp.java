@@ -142,9 +142,9 @@ public class MyProhibitedPolygonRwp
         if( areaDestination == -1) {
             //TODO move into/out of the Building via Entrance x
             Path p1 = new Path();
-            System.out.println("host "+host);
-            System.out.println("daily "+host.getDailyBehaviour());
-            System.out.println("state "+host.getDailyBehaviour().getState());
+           // System.out.println("host "+host);
+           // System.out.println("daily "+host.getDailyBehaviour());
+           // System.out.println("state "+host.getDailyBehaviour().getState());
             if(destination.equals(this.BIKE_NORTH_COORDS) || destination.equals(this.UBAHN_COORDS) || !(host.getDailyBehaviour().getState() instanceof DepartureState)){
                 p1 = this.getPath(source, this.ENTRANCE_NORTH, speed);
             }else if(destination.equals(this.BIKE_EAST_COORDS)){
