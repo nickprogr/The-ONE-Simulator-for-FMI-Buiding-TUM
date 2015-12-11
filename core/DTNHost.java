@@ -105,7 +105,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	//TODO: AcctionListener for connection
 
 	public void addConnection(DTNHost host) {
-		dailyBehaviour.addConnection(host);
+		System.out.println("Not implemented in DTNHost");
+		//dailyBehaviour.addConnection(host);
 	}
 
 	//public Map<DTNHost,Double> getConnectedHosts(){
