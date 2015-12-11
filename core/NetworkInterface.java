@@ -4,6 +4,7 @@
  */
 package core;
 
+import SocialBehaviour.SocialCliques;
 import interfaces.ConnectivityGrid;
 import interfaces.ConnectivityOptimizer;
 
@@ -317,6 +318,7 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 	 */
 	protected void connect(Connection con, NetworkInterface anotherInterface) {
 		this.connections.add(con);
+		c5 += 1;
 		notifyConnectionListeners(CON_UP, anotherInterface.getHost());
 
 		// set up bidirectional connection
@@ -335,6 +337,7 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 	protected void disconnect(Connection con, 
 			NetworkInterface anotherInterface) {
 		con.setUpState(false);
+		c4 += 1;
 		notifyConnectionListeners(CON_DOWN, anotherInterface.getHost());
 
 		// tear down bidirectional connection
@@ -403,22 +406,85 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 	 * @param type Type of the change (e.g. {@link #CON_DOWN} )
 	 * @param otherHost The other host on the other end of the connection.
 	 */
+	private int con_all = 0;
+	private int con_social = 0;
+	private int con_social_connecteable = 0;
+	private int con_social_connecteable_addToGroup = 0;
+	private int dec = 0;
+
+	private int c1 = 0;
+	private int c2 = 0;
+	private int c3 = 0;
+	private int c4 = 0;
+	private int c5 = 0;
+	private int c6 = 0;
 	private void notifyConnectionListeners(int type, DTNHost otherHost) {
+
+		c6 += 1;
 		if (this.cListeners == null) {
 			return;
 		}
 		for (ConnectionListener cl : this.cListeners) {
 			switch (type) {
 			case CON_UP:
-				cl.hostsConnected(this.host, otherHost);
+				c1 +=1;
+				boolean checkHost1 = shouldSociallyBeConneceted(otherHost);
+				if(checkHost1) {
+					cl.hostsConnected(this.host, otherHost);
+				}
 				break;
 			case CON_DOWN:
+				c2 += 1;
+				if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
+					host.getDailyBehaviour().reportHelper.removeSocialConnections();
+				}
 				cl.hostsDisconnected(this.host, otherHost);
+				host.getDailyBehaviour().reportHelper.removeConnection();
 				break;
 			default:
 				assert false : type;	// invalid type code
 			}
 		}
+		//printBla();
+	}
+
+	private void printBla(){
+		System.out.println("c1 up "+c1);
+		System.out.println("c2 down "+c2);
+		System.out.println("c3 down "+c3);
+		System.out.println("c4 down "+c4);
+		System.out.println("c5 up "+c5);
+		System.out.println("c6 calls "+c6);
+	}
+	private boolean shouldSociallyBeConneceted(DTNHost host2){
+		//       if(state instanceof FreetimeState) {
+		if (SocialCliques.socialCliques.haveSharedGroup(host2, this.host)) {
+
+			if (this.host.getDailyBehaviour().getState().enableConnections() && host2.getDailyBehaviour().getState().enableConnections()) {
+
+
+				if (this.host.getDailyBehaviour().getGroup().getSize() <= 1 && this.host.getDailyBehaviour().getGroup().getSize() < 6) {//If not already in a group and other group has not more than already 5 members
+					Random random = new Random();
+					//if (random.nextDouble() < 0.1) {
+					//System.out.println("-- addGroup");
+					host2.getDailyBehaviour().getGroup().addMember(this.host);
+					this.host.getDailyBehaviour().setGroup(host2.getDailyBehaviour().getGroup());
+					//TODO: At this point, count all social connections which really got established		-> Reported in Groups
+					return true;        //TODO: if node is added to the same group
+
+					//host1.getDailyBehaviour().getGroup().setInactive(50);
+					//}
+				}
+				host.getDailyBehaviour().reportHelper.addAllConnectableSocialConnections();
+				//TODO: at this point only socially linked nodes are considered which are in states that allow new connections (e.g. NOT LectureState)
+
+			}
+			host.getDailyBehaviour().reportHelper.addAllSocialConnections();
+			//TODO: At this point, count all social connections where socially linked nodes met
+		}
+		host.getDailyBehaviour().reportHelper.addAllConnection();
+
+		return false;
 	}
 	
 	/**
@@ -476,6 +542,7 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 		Connection con = this.connections.get(index);
 		DTNHost anotherNode = anotherInterface.getHost();
 		con.setUpState(false);
+		c3 += 1;
 		notifyConnectionListeners(CON_DOWN, anotherNode);
 
 		// tear down bidirectional connection

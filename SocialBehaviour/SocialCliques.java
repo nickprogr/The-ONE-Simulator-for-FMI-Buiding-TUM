@@ -34,8 +34,7 @@ public class SocialCliques {
 
         for(DTNHost host : hosts){
             //Define amount of groups
-            //int amount_groups = rand.nextInt(averageCliqueAmount*2);//TODO: Add
-            int amount_groups = 1;
+            int amount_groups = rand.nextInt(averageCliqueAmount*2);
             for( ;amount_groups > 0; amount_groups--){
                 int group_no = 0;
                 do {
@@ -46,8 +45,7 @@ public class SocialCliques {
                     list = new ArrayList();
                 list.add(host);
                 groups.put(group_no, list);
-                //host.addGroup(group_no);  //TODO: Add
-                host.addGroup(1);
+                host.addGroup(group_no);
             }
         }
         addGroupWorkDate();

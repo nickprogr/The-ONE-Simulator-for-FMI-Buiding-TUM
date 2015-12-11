@@ -25,7 +25,6 @@ public class LectureState extends State {
         destinationReached = false;
         double variationX = random.nextDouble()*lecture.getRoomDimensions().getX()-lecture.getRoomDimensions().getX()/2;
         double variationY = random.nextDouble()*lecture.getRoomDimensions().getY()-lecture.getRoomDimensions().getY()/2;
-
         lectureCoord = new Coord(lecture.getCoord().getX()+variationX,lecture.getCoord().getY()+variationY);
         //System.out.println("LectureState");
     }

@@ -18,6 +18,10 @@ public class LunchState extends State {
         state = this;
         destinationReached = false;
         lunchLocation = selectLunchLocation();
+        double variationX = random.nextDouble()*random.nextDouble()*4-2;
+        double variationY = random.nextDouble()*random.nextDouble()*4-2;
+        lunchLocation = new Coord(lunchLocation.getX()+variationX,lunchLocation.getY()+variationY);
+        //System.out.println("LectureState");
         //System.out.println("LectureState");
     }
 

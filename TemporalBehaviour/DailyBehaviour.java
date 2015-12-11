@@ -2,6 +2,7 @@ package TemporalBehaviour;
 
 import SocialBehaviour.Group;
 //import TemporalBehaviour.states.UBahnDepartureState;
+import SocialBehaviour.ReportHelper;
 import SocialBehaviour.SocialCliques;
 import core.*;
 import movement.MovementModel;
@@ -39,6 +40,7 @@ public class DailyBehaviour {
     private double arrivalTime = 0;
     private double departureTime = 0;
 
+    public ReportHelper reportHelper = new ReportHelper();
 
     private Group group;
     private int arrivalType;
@@ -59,7 +61,7 @@ public class DailyBehaviour {
     public void setState(State state) {
         if (this.state == null || this.state.getID() != state.getID()) {
             this.state = state;
-            System.out.println("state "+state);
+            //System.out.println("state "+state);
             this.destination = null;        //To stop current movement
             this.path = null;
             skipLecture = false;
@@ -70,26 +72,36 @@ public class DailyBehaviour {
         }
     }
 
-    public void addConnection(DTNHost otherHost) {
-        //Only forward connection if they really know each other
-        //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
-        if (state.enableConnections() && otherHost.getDailyBehaviour().getState().enableConnections()) {
-            //       if(state instanceof FreetimeState) {
+//    public void addConnection(DTNHost otherHost) {
+//        //Only forward connection if they really know each other
+//        //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
+//        if (state.enableConnections() && otherHost.getDailyBehaviour().getState().enableConnections()) {
+//            //       if(state instanceof FreetimeState) {
+//
+//            if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
+//                Random random = new Random();
+//
+//                if (this.group.getSize() <= 1 && host.getDailyBehaviour().group.getSize() < 6) {//If not already in a group and other group has not more than already 5 members
+//
+//                    if (random.nextDouble() < 0.1) {
+//                        //System.out.println("-- addGroup");
+//                        otherHost.getDailyBehaviour().group.addMember(this.host);
+//                        this.group = otherHost.getDailyBehaviour().group;
+//                        group.setInactive(50);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-            if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
-                Random random = new Random();
-
-                if (this.group.getSize() <= 1 && host.getDailyBehaviour().group.getSize() < 6) {//If not already in a group and other group has not more than already 5 members
-
-                    if (random.nextDouble() < 0.1) {
-                        //System.out.println("-- addGroup");
-                        otherHost.getDailyBehaviour().group.addMember(this.host);
-                        this.group = otherHost.getDailyBehaviour().group;
-                        group.setInactive(50);
-                    }
-                }
-            }
-        }
+    public Group getGroup(){
+        return group;
+    }
+    public void setGroup(Group group) {
+        this.group = group;
+        //if(group.getMembers().size() > 1) {
+        //    System.out.println("Groupsize " + group.getMembers().size());
+        //}
     }
 
     public void removeConnection(DTNHost host){
@@ -125,7 +137,7 @@ public class DailyBehaviour {
 
         setInitialLocation();
 
-        group = new Group(host);
+        setGroup(new Group(host));
     }
 
     public DTNHost getHost(){
@@ -193,13 +205,13 @@ public class DailyBehaviour {
         }
         //System.out.println("c "+group.getSize());
 
-        if (state.getID() != newState.getID() && group.getSize() > 1) { //&& group.getSize() > 1){
+        if (state.getID() != newState.getID() && group.getSize() <= 1) { //&& group.getSize() > 1){
             //Consider to change group
             Random rand = new Random();
             if(rand.nextDouble()<0.7) {             //Remove from group and change state and make a new group
                 group.removeMember(this.host);
                 setState(state.switchState(30,0,5,15,40,10));
-                group = new Group(this.host);
+                setGroup(new Group(this.host));
             }
         }else{
             this.setState(newState);
@@ -444,4 +456,6 @@ public class DailyBehaviour {
     public double getDepartureTime() {
         return departureTime;
     }
+
+
 }

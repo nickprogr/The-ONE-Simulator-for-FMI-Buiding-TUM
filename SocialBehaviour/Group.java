@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Group {
 
-    ArrayList<DTNHost> members = new ArrayList<DTNHost>();
+    private ArrayList<DTNHost> members = new ArrayList<DTNHost>();
    // State state = new InitState(null); //First Member of Group guides
    // Coord coord;
 
@@ -23,10 +23,30 @@ public class Group {
     }
 
     public void addMember(DTNHost member){
+        for(DTNHost host: members){
+            host.getDailyBehaviour().reportHelper.addAllConnectableSocialConnectionsConnected();
+            host.getDailyBehaviour().reportHelper.addAllConnectableSocialConnections();
+            host.getDailyBehaviour().reportHelper.addAllSocialConnections();
+            host.getDailyBehaviour().reportHelper.addAllConnection();
+
+            member.getDailyBehaviour().reportHelper.addAllConnectableSocialConnectionsConnected();
+            member.getDailyBehaviour().reportHelper.addAllConnectableSocialConnections();
+            member.getDailyBehaviour().reportHelper.addAllSocialConnections();
+            member.getDailyBehaviour().reportHelper.addAllConnection();
+        }
         members.add(member);
     }
     public void removeMember(DTNHost member){
         members.remove(member);
+        for(DTNHost host: members){
+            host.getDailyBehaviour().reportHelper.removeSocialConnectdConnection();
+            host.getDailyBehaviour().reportHelper.removeConnection();
+            host.getDailyBehaviour().reportHelper.removeSocialConnections();
+
+            member.getDailyBehaviour().reportHelper.removeSocialConnectdConnection();
+            member.getDailyBehaviour().reportHelper.removeConnection();
+            member.getDailyBehaviour().reportHelper.removeSocialConnections();
+        }
 //       System.out.println("size: "+members.size()+" new get(0)"+members.get(0));
 //        for(DTNHost member1 : members){
 //            System.out.println("name: "+member1.getName());
@@ -77,6 +97,9 @@ public class Group {
         for(DTNHost member : members){
             member.getDailyBehaviour().getMovement().setInactive(inactive);
         }
+    }
+    public ArrayList<DTNHost> getMembers(){
+        return members;
     }
 
 }
