@@ -72,27 +72,27 @@ public class DailyBehaviour {
         }
     }
 
-//    public void addConnection(DTNHost otherHost) {
-//        //Only forward connection if they really know each other
-//        //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
-//        if (state.enableConnections() && otherHost.getDailyBehaviour().getState().enableConnections()) {
-//            //       if(state instanceof FreetimeState) {
-//
-//            if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
-//                Random random = new Random();
-//
-//                if (this.group.getSize() <= 1 && host.getDailyBehaviour().group.getSize() < 6) {//If not already in a group and other group has not more than already 5 members
-//
-//                    if (random.nextDouble() < 0.1) {
-//                        //System.out.println("-- addGroup");
-//                        otherHost.getDailyBehaviour().group.addMember(this.host);
-//                        this.group = otherHost.getDailyBehaviour().group;
-//                        group.setInactive(50);
-//                    }
-//                }
-//            }
-//        }
-//    }
+    public void addConnection(DTNHost otherHost) {
+        //Only forward connection if they really know each other
+        //if(!(state instanceof IdleState) && !(host.getDailyBehaviour().getState() instanceof IdleState)) {
+        if (state.enableConnections() && otherHost.getDailyBehaviour().getState().enableConnections()) {
+            //       if(state instanceof FreetimeState) {
+
+            if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
+                Random random = new Random();
+
+                if (this.group.getSize() <= 1 && host.getDailyBehaviour().group.getSize() < 6) {//If not already in a group and other group has not more than already 5 members
+
+                    if (random.nextDouble() < 0.1) {
+                        //System.out.println("-- addGroup");
+                        otherHost.getDailyBehaviour().group.addMember(this.host);
+                        this.group = otherHost.getDailyBehaviour().group;
+                        group.setInactive(50);
+                    }
+                }
+            }
+        }
+    }
 
     public Group getGroup(){
         return group;

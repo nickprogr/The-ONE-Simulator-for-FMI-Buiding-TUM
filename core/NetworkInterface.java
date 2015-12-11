@@ -428,18 +428,18 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 			switch (type) {
 			case CON_UP:
 				c1 +=1;
-				boolean checkHost1 = shouldSociallyBeConneceted(otherHost);
-				if(checkHost1) {
+				//boolean checkHost1 = shouldSociallyBeConneceted(otherHost);
+				//if(checkHost1) {
 					cl.hostsConnected(this.host, otherHost);
-				}
+				//}
 				break;
 			case CON_DOWN:
 				c2 += 1;
-				if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
-					host.getDailyBehaviour().reportHelper.removeSocialConnections();
-				}
+				//if (SocialCliques.socialCliques.haveSharedGroup(otherHost, this.host)) {
+				//	host.getDailyBehaviour().reportHelper.removeSocialConnections();
+				//}
 				cl.hostsDisconnected(this.host, otherHost);
-				host.getDailyBehaviour().reportHelper.removeConnection();
+				//host.getDailyBehaviour().reportHelper.removeConnection();
 				break;
 			default:
 				assert false : type;	// invalid type code

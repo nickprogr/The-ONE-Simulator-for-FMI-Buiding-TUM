@@ -6,8 +6,8 @@ package core;
 public class ImplConnListener implements ConnectionListener {
 
     public void hostsConnected(DTNHost host1, DTNHost host2){
-        //host1.addConnection(host2);
-        //host2.addConnection(host1);
+        host1.addConnection(host2);
+        host2.addConnection(host1);
 
     }
 
