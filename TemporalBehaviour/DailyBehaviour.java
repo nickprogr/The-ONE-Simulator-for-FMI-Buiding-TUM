@@ -24,7 +24,7 @@ public class DailyBehaviour {
     private DTNHost host;
     private MovementModel movementModel;
 
-    public static double START_BLOCK1 = 200;// 2*60*60;// 8*60*60;//200;
+    public static double START_BLOCK1 = 8*60*60;// 2*60*60;// 8*60*60;//200;
     public static double MAX_LECTURE_DELAY = 30*60;
 
     public static final int ARRIVAL_UBAHN_NORTH = 0;
